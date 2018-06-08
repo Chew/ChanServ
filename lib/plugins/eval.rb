@@ -2,7 +2,7 @@ module Eval
   extend Discordrb::Commands::CommandContainer
 
   command(:eval) do |event, *code|
-    break unless event.user.id == CONFIG['user_id']
+    break unless event.user.id == CONFIG['owner_id']
     begin
       event.channel.send_embed do |e|
         e.title = '**Evaluated Successfully**'
