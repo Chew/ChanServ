@@ -1,6 +1,12 @@
 require 'discordrb'
+require 'yaml'
 
-Bot = Discordrb::Commands::CommandBot.new token: 'MjcxNzUwMDg4MzgzMTM1NzQ1.DfQ1aA.cisFrJX3Kj6a9fcuAHcf3m98VD4', client_id: 271_750_088_383_135_745, prefix: ';', help_command: false
+CONFIG = YAML.load_file('config.yaml')
+
+Bot = Discordrb::Commands::CommandBot.new token: CONFIG['token'],
+                                          client_id: CONFIG['client_id'],
+                                          prefix: ';',
+                                          help_command: false
 
 Dir["#{File.dirname(__FILE__)}/plugins/*.rb"].each { |file| require file }
 
