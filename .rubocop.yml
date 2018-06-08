@@ -1,0 +1,47 @@
+Metrics/LineLength:
+  Max: 356
+
+Security/Eval:
+  Enabled: false
+
+MethodLength:
+  Enabled: false
+
+Style/RescueStandardError:
+  Enabled: false
+
+AllCops:
+  TargetRubyVersion: 2.4.1
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Metrics/BlockLength:
+  Max: 80
+
+AllCops:
+  DisplayCopNames: true
+
+Style/Documentation:
+  Enabled: false
+
+Style/FormatStringToken:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Style/GuardClause:
+  Enabled: false
+
+Lint/UriEscapeUnescape:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: false
