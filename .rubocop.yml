@@ -12,15 +12,13 @@ Style/RescueStandardError:
 
 AllCops:
   TargetRubyVersion: 2.4.1
+  DisplayCopNames: true
 
 Style/FrozenStringLiteralComment:
   Enabled: false
 
 Metrics/BlockLength:
   Max: 80
-
-AllCops:
-  DisplayCopNames: true
 
 Style/Documentation:
   Enabled: false
