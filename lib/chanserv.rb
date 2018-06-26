@@ -42,5 +42,49 @@ def modes(event)
   modes
 end
 
+Bot.user_ban do |event|
+  cases = File.readlines('cases.txt') { |line| line.split.map(&:to_s).join }
+  message = Bot.channel(210_174_983_278_690_304).send_message [
+    "**Ban** | Case ##{cases.length}",
+    "User: #{event.user.name}##{event.user.discrim} (#{event.user.mention})",
+    'Reason: Responsible staff please add reason by `;reason case# [reason]`',
+    'Responsible staff: [unknown]'
+  ].join("\n")
+  filename = 'cases.txt'
+  File.open(filename, 'a+') { |f| f.puts(message.id.to_s) }
+end
+
+Bot.user_unban do |event|
+  cases = File.readlines('cases.txt') { |line| line.split.map(&:to_s).join }
+  message = Bot.channel(210_174_983_278_690_304).send_message [
+    "**Un-ban** | Case ##{cases.length}",
+    "User: #{event.user.name}##{event.user.discrim} (#{event.user.mention})",
+    'Reason: Responsible staff please add reason by `;reason case# [reason]`',
+    'Responsible staff: [unknown]'
+  ].join("\n")
+  filename = 'cases.txt'
+  File.open(filename, 'a+') { |f| f.puts(message.id.to_s) }
+end
+
+Bot.member_join do |event|
+  Bot.channel(134_445_052_805_120_001).send_embed do |embed|
+    embed.title = 'User Joined the Server!'
+    embed.colour = 0xd084
+    embed.description = "Please welcome #{event.user.mention} to the server!"
+
+    embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: "Member Count: #{event.server.member_count}")
+  end
+end
+
+Bot.member_leave do |event|
+  Bot.channel(134_445_052_805_120_001).send_embed do |embed|
+    embed.title = 'User Left the Server!'
+    embed.colour = 0xd084
+    embed.description = "#{event.user.distinct} left! RIP :("
+
+    embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: "Member Count: #{event.server.member_count}")
+  end
+end
+
 puts 'Bot is ready!'
 Bot.run
