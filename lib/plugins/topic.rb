@@ -12,4 +12,15 @@ module Topic
       e.color = '00FF00'
     end
   end
+
+  command(:fixtopic) do |event|
+    break unless event.user.id == 116_013_677_060_161_545
+    if event.channel.topic == ''
+      event.channel.topic = '[+nt]'
+      break
+    else
+      event.channel.topic = '[+nt] ' + event.channel.topic
+    end
+    event.respond 'Fixed!'
+  end
 end
