@@ -14,7 +14,7 @@ module Topic
   end
 
   command(:fixtopic) do |event|
-    break unless event.user.id == 116_013_677_060_161_545
+    break unless event.user.id == CONFIG['owner_id']
     if event.channel.topic == ''
       event.channel.topic = '[+nt]'
       break
