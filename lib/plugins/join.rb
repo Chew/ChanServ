@@ -32,7 +32,7 @@ module Join
       break
     end
 
-    bot.channel(id).define_overwrite(event.user, allow, deny)
-    bot.send_message(id, "*#{event.user.mention} has joined the channel!*")
+    Bot.channel(id).define_overwrite(event.user, allow, deny)
+    Bot.send_message(id, "*#{event.user.mention} has joined the channel!*")
   end
 end

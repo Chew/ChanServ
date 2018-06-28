@@ -30,7 +30,7 @@ module FLeave
       event.send_temporary_message('You can only leave community channels!', 5)
       break
     end
-    bot.channel(id).delete_overwrite(event.user.id)
+    Bot.channel(id).delete_overwrite(event.user.id)
     event.respond "*#{event.user.mention} has left the channel!*"
   end
 end

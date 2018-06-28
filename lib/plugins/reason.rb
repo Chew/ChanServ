@@ -13,7 +13,7 @@ module Reason
     end
     event.message.delete
     cases = File.readlines('cases.txt') { |line| line.split.map(&:to_s).join }
-    message = bot.channel(210_174_983_278_690_304).message(cases[caseid.to_i].to_i).to_s
+    message = Bot.channel(210_174_983_278_690_304).message(cases[caseid.to_i].to_i).to_s
     joe = message.split("\n")
     if joe[0].include? 'User Mode Updated'
       joe[3] = 'Reason: ' + reason.join(' ')
@@ -22,7 +22,7 @@ module Reason
       joe[3] = "Responsible staff: #{event.user.mention}" if joe[3].include? '[unknown]'
     end
     edited = joe.join("\n")
-    bot.channel(210_174_983_278_690_304).message(cases[caseid.to_i].to_i).edit edited
+    Bot.channel(210_174_983_278_690_304).message(cases[caseid.to_i].to_i).edit edited
     event.send_temporary_message("Reason for case #{caseid} set to: #{reason.join(' ')}", 10)
   end
 end

@@ -16,7 +16,7 @@ module FJoin
     allow = Discordrb::Permissions.new
     allow.can_read_messages = true
     deny = Discordrb::Permissions.new
-    userid = bot.parse_mention(mention.to_s).id.to_i
+    userid = Bot.parse_mention(mention.to_s).id.to_i
     user = event.server.member(userid)
 
     case join
@@ -43,7 +43,7 @@ module FJoin
       break
     end
 
-    bot.channel(id).define_overwrite(user, allow, deny)
-    bot.send_message(id, "*#{user.mention} has joined the channel!*")
+    Bot.channel(id).define_overwrite(user, allow, deny)
+    Bot.send_message(id, "*#{user.mention} has joined the channel!*")
   end
 end

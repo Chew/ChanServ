@@ -12,7 +12,7 @@ module Admin
       next
     end
 
-    userid = bot.parse_mention(mention.to_s).id.to_i
+    userid = Bot.parse_mention(mention.to_s).id.to_i
     user = event.server.member(userid)
     to_add = event.server.roles.find { |role| role.name == 'Admins' }
     user.add_role(to_add)
@@ -24,7 +24,7 @@ module Admin
       e.color = '00FF00'
     end
     cases = File.readlines('cases.txt') { |line| line.split.map(&:to_s).join }
-    message = bot.channel(210_174_983_278_690_304).send_message [
+    message = Bot.channel(210_174_983_278_690_304).send_message [
       "**User Mode Updated** | Case ##{cases.length}",
       "User: #{user.name}##{user.discrim} (#{user.mention})",
       'Mode: Admin (+a)',
