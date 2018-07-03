@@ -5,7 +5,7 @@ CONFIG = YAML.load_file('config.yaml')
 
 Bot = Discordrb::Commands::CommandBot.new token: CONFIG['token'],
                                           client_id: CONFIG['client_id'],
-                                          prefix: ';',
+                                          prefix: CONFIG['prefix'],
                                           help_command: false
 
 Dir["#{File.dirname(__FILE__)}/plugins/*.rb"].each { |file| require file }
@@ -92,32 +92,6 @@ Bot.message(includes: 'discord.gg') do |event|
   if message.include?('discord.gg')
     event.message.delete
     event.send_temporary_message("#{event.user.mention}, discord link postings are disabled!", 10)
-  end
-end
-
-Bot.message(includes: '') do |event|
-  next if %w[Oper Owner Admin Op].include? role(event).to_s
-  next unless [134_445_052_805_120_001, 235_175_875_732_176_896, 421_472_240_169_910_282].include? event.channel.id.to_i
-  message = event.message.to_s
-  message.downcase!
-  swears = File.readlines('swears.txt') { |line| line.split.map(&:to_s).join }
-  swears = swears[0]
-  swears.delete!("\n")
-  swears = swears.split(',')
-  swears.each do |swear|
-    next unless message.include?(swear)
-    event.message.delete
-    event.send_temporary_message("#{event.user.mention}, please do not swear!", 10)
-    Bot.channel(424_005_662_113_136_640).send_embed do |e|
-      e.title = 'Someone just swore!'
-
-      e.add_field(name: 'Invoker', value: event.user.mention, inline: true)
-      e.add_field(name: 'Swear', value: swear, inline: true)
-      e.add_field(name: 'Channel', value: "<##{event.channel.id}>", inline: true)
-      e.add_field(name: 'Message', value: message, inline: false)
-
-      e.color = 'FF0000'
-    end
   end
 end
 
