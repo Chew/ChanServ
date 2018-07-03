@@ -60,13 +60,15 @@ module Mode
       e.color = '00FF00'
     end
     cases = File.readlines('cases.txt') { |line| line.split.map(&:to_s).join }
-    message = Bot.channel(210_174_983_278_690_304).send_message [
-      "**User Mode Updated** | Case ##{cases.length}",
-      "User: #{user.name}##{user.discrim} (#{user.mention})",
-      "Mode: #{mode}",
-      'Reason: Responsible staff please add reason by `;reason case# [reason]`',
-      "Responsible staff: #{event.user.mention}"
-    ].join("\n")
+    message = Bot.channel(210_174_983_278_690_304).send_embed do |embed|
+      embed.title = "User Mode Updated | Case ##{cases.length}"
+      embed.colour = 0xd084
+
+      embed.add_field(name: 'User', value: "#{user.distinct} (#{user.mention})", inline: true)
+      embed.add_field(name: 'Mode', value: mode, inline: true)
+      embed.add_field(name: 'resp staff', value: event.user.mention, inline: true)
+      embed.add_field(name: 'Reason', value: 'Responsible staff please add reason by `;reason case# [reason]`', inline: true)
+    end
     filename = 'cases.txt'
     File.open(filename, 'a+') { |f| f.puts(message.id.to_s) }
   end
