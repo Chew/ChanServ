@@ -11,18 +11,59 @@ module Reason
       end
       next
     end
+
     event.message.delete
-    cases = File.readlines('cases.txt') { |line| line.split.map(&:to_s).join }
-    message = Bot.channel(210_174_983_278_690_304).message(cases[caseid.to_i].to_i).to_s
-    joe = message.split("\n")
-    if joe[0].include? 'User Mode Updated'
-      joe[3] = 'Reason: ' + reason.join(' ')
-    else
-      joe[2] = 'Reason: ' + reason.join(' ')
-      joe[3] = "Responsible staff: #{event.user.mention}" if joe[3].include? '[unknown]'
+
+    if caseid.to_i < 95
+      event.respond 'This log happened prior to audit-log 2.0. The reason will not be able to change! Please try again.'
+      break
     end
-    edited = joe.join("\n")
-    Bot.channel(210_174_983_278_690_304).message(cases[caseid.to_i].to_i).edit edited
+
+    cases = File.readlines('cases.txt') { |line| line.split.map(&:to_s).join }
+    message = Bot.channel(210_174_983_278_690_304).message(cases[caseid.to_i].to_i)
+
+    embed = message.embeds[0]
+
+    fields = embed.fields
+
+    fields.each do |find|
+      next unless find.name == 'Reason'
+      fields.delete(find)
+      fields[fields.length] = Discordrb::Webhooks::EmbedField.new(
+        name: find.name,
+        value: reason.join(' '),
+        inline: true
+      )
+    end
+
+    defe = []
+
+    fields.each do |meme|
+      defe[defe.length] = Discordrb::Webhooks::EmbedField.new(
+        name: meme.name,
+        value: meme.value,
+        inline: true
+      )
+    end
+
+    case embed.title.split(' | ')[0]
+    when 'Ban'
+      color = 0xFF0000
+    when 'Kick'
+      color = 0xFAD765
+    when 'User Mode Updated'
+      color = 0x2FFA76
+    end
+
+    message.edit(
+      '', Discordrb::Webhooks::Embed.new(
+            title: embed.title,
+
+            fields: defe,
+
+            color: color
+          )
+    )
     event.send_temporary_message("Reason for case #{caseid} set to: #{reason.join(' ')}", 10)
   end
 end
