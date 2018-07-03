@@ -30,7 +30,7 @@ module Op
 
       embed.add_field(name: 'User', value: "#{user.distinct} (#{user.mention})", inline: true)
       embed.add_field(name: 'Mode', value: 'Op (+o)', inline: true)
-      embed.add_field(name: 'resp staff', value: event.user.mention, inline: true)
+      embed.add_field(name: 'Responsible Staff', value: event.user.mention, inline: true)
       embed.add_field(name: 'Reason', value: 'Responsible staff please add reason by `;reason case# [reason]`', inline: true)
     end
     filename = 'cases.txt'

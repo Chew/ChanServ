@@ -49,7 +49,7 @@ Bot.user_ban do |event|
     embed.colour = 0xd084
 
     embed.add_field(name: 'User', value: "#{event.user.distinct} (#{event.user.mention})", inline: true)
-    embed.add_field(name: 'resp staff', value: '[Unknown]', inline: true)
+    embed.add_field(name: 'Responsible Staff', value: '[Unknown]', inline: true)
     embed.add_field(name: 'Reason', value: 'Responsible staff please add reason by `;reason case# [reason]`', inline: true)
   end
   filename = 'cases.txt'
@@ -63,7 +63,7 @@ Bot.user_unban do |event|
     embed.colour = 0xd084
 
     embed.add_field(name: 'User', value: "#{event.user.distinct} (#{event.user.mention})", inline: true)
-    embed.add_field(name: 'resp staff', value: '[Unknown]', inline: true)
+    embed.add_field(name: 'Responsible Staff', value: '[Unknown]', inline: true)
     embed.add_field(name: 'Reason', value: 'Responsible staff please add reason by `;reason case# [reason]`', inline: true)
   end
   filename = 'cases.txt'
