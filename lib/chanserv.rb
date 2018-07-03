@@ -44,24 +44,28 @@ end
 
 Bot.user_ban do |event|
   cases = File.readlines('cases.txt') { |line| line.split.map(&:to_s).join }
-  message = Bot.channel(210_174_983_278_690_304).send_message [
-    "**Ban** | Case ##{cases.length}",
-    "User: #{event.user.name}##{event.user.discrim} (#{event.user.mention})",
-    'Reason: Responsible staff please add reason by `;reason case# [reason]`',
-    'Responsible staff: [unknown]'
-  ].join("\n")
+  message = Bot.channel(210_174_983_278_690_304).send_embed do |embed|
+    embed.title = "Ban | Case ##{cases.length}"
+    embed.colour = 0xd084
+
+    embed.add_field(name: 'User', value: "#{event.user.distinct} (#{event.user.mention})", inline: true)
+    embed.add_field(name: 'resp staff', value: '[Unknown]', inline: true)
+    embed.add_field(name: 'Reason', value: 'Responsible staff please add reason by `;reason case# [reason]`', inline: true)
+  end
   filename = 'cases.txt'
   File.open(filename, 'a+') { |f| f.puts(message.id.to_s) }
 end
 
 Bot.user_unban do |event|
   cases = File.readlines('cases.txt') { |line| line.split.map(&:to_s).join }
-  message = Bot.channel(210_174_983_278_690_304).send_message [
-    "**Un-ban** | Case ##{cases.length}",
-    "User: #{event.user.name}##{event.user.discrim} (#{event.user.mention})",
-    'Reason: Responsible staff please add reason by `;reason case# [reason]`',
-    'Responsible staff: [unknown]'
-  ].join("\n")
+  message = Bot.channel(210_174_983_278_690_304).send_embed do |embed|
+    embed.title = "Un-Ban | Case ##{cases.length}"
+    embed.colour = 0xd084
+
+    embed.add_field(name: 'User', value: "#{event.user.distinct} (#{event.user.mention})", inline: true)
+    embed.add_field(name: 'resp staff', value: '[Unknown]', inline: true)
+    embed.add_field(name: 'Reason', value: 'Responsible staff please add reason by `;reason case# [reason]`', inline: true)
+  end
   filename = 'cases.txt'
   File.open(filename, 'a+') { |f| f.puts(message.id.to_s) }
 end
