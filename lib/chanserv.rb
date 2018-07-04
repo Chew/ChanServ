@@ -22,6 +22,7 @@ end
 puts 'Done loading plugins! Finalizing start-up'
 
 def role(event)
+  return 'Member' if event.user.roles.count.zero?
   return 'Oper' if event.user.role?(event.server.roles.find { |role| role.name == 'Oper' }) == true
   return 'Owner' if event.user.role?(event.server.roles.find { |role| role.name == 'Owner' }) == true
   return 'Admin' if event.user.role?(event.server.roles.find { |role| role.name == 'Admins' }) == true
