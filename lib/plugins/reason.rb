@@ -27,21 +27,21 @@ module Reason
     fields = embed.fields
 
     fields.each do |find|
-      next unless find.name == 'Reason'
-      fields.delete(find)
-      fields[fields.length] = Discordrb::Webhooks::EmbedField.new(
-        name: find.name,
-        value: reason.join(' '),
-        inline: true
-      )
-    end
-
-    fields.each do |find|
       next unless find.value == '[Unknown]'
       fields.delete(find)
       fields[fields.length] = Discordrb::Webhooks::EmbedField.new(
         name: find.name,
         value: event.user.mention,
+        inline: true
+      )
+    end
+
+    fields.each do |find|
+      next unless find.name == 'Reason'
+      fields.delete(find)
+      fields[fields.length] = Discordrb::Webhooks::EmbedField.new(
+        name: find.name,
+        value: reason.join(' '),
         inline: true
       )
     end
