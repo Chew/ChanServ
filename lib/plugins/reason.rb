@@ -36,6 +36,16 @@ module Reason
       )
     end
 
+    fields.each do |find|
+      next unless find.value == '[Unknown]'
+      fields.delete(find)
+      fields[fields.length] = Discordrb::Webhooks::EmbedField.new(
+        name: find.name,
+        value: event.user.mention,
+        inline: true
+      )
+    end
+
     defe = []
 
     fields.each do |meme|
