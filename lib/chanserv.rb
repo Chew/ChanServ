@@ -113,7 +113,7 @@ Bot.message(includes: '') do |event|
     next unless message.include?(swear)
     event.message.delete
     event.send_temporary_message("#{event.user.mention}, please do not swear!", 10)
-    bot.channel(424_005_662_113_136_640).send_embed do |e|
+    Bot.channel(424_005_662_113_136_640).send_embed do |e|
       e.title = 'Someone just swore!'
 
       e.add_field(name: 'Invoker', value: event.user.mention, inline: true)
