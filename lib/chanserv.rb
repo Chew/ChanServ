@@ -23,12 +23,11 @@ puts 'Done loading plugins! Finalizing start-up'
 
 def role(event)
   return 'Member' if event.user.roles.count.zero?
-  return 'Oper' if event.user.role?(event.server.roles.find { |role| role.name == 'Oper' }) == true
-  return 'Owner' if event.user.role?(event.server.roles.find { |role| role.name == 'Owner' }) == true
-  return 'Admin' if event.user.role?(event.server.roles.find { |role| role.name == 'Admins' }) == true
-  return 'Op' if event.user.role?(event.server.roles.find { |role| role.name == 'Ops' }) == true
-  return 'Half-Op' if event.user.role?(event.server.roles.find { |role| role.name == 'Half-Ops' }) == true
-  return 'Voiced' if event.user.role?(event.server.roles.find { |role| role.name == 'Voiced' }) == true
+  return 'Oper' if event.user.role?(event.server.roles.find { |role| role.name == 'Chew Herself' }) == true
+  return 'Owner' if event.user.role?(event.server.roles.find { |role| role.name == 'Chew Herself' }) == true
+  return 'Admin' if event.user.role?(event.server.roles.find { |role| role.name == 'Admin' }) == true
+  return 'Op' if event.user.role?(event.server.roles.find { |role| role.name == 'Mod' }) == true
+  return 'Half-Op' if event.user.role?(event.server.roles.find { |role| role.name == 'Helper' }) == true
   'Member'
 end
 
