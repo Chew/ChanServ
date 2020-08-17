@@ -8,9 +8,9 @@ Bot = Discordrb::Commands::CommandBot.new token: CONFIG['token'],
                                           prefix: CONFIG['prefix'],
                                           help_command: false
 
-Dir["#{File.dirname(__FILE__)}/plugins/*.rb"].each { |file| require file }
-
 Dir["#{File.dirname(__FILE__)}/plugins/*.rb"].each do |wow|
+  require wow
+  load wow
   bob = File.readlines(wow) { |line| line.split.map(&:to_s).join }
   command = bob[0][7..bob[0].length]
   command.delete!("\n")
@@ -23,11 +23,13 @@ puts 'Done loading plugins! Finalizing start-up'
 
 def role(event)
   return 'Member' if event.user.roles.count.zero?
-  return 'Oper' if event.user.role?(event.server.roles.find { |role| role.name == 'Chew Herself' }) == true
-  return 'Owner' if event.user.role?(event.server.roles.find { |role| role.name == 'Chew Herself' }) == true
-  return 'Admin' if event.user.role?(event.server.roles.find { |role| role.name == 'Admin' }) == true
-  return 'Op' if event.user.role?(event.server.roles.find { |role| role.name == 'Mod' }) == true
-  return 'Half-Op' if event.user.role?(event.server.roles.find { |role| role.name == 'Helper' }) == true
+  return 'Oper' if event.user.role?(event.server.roles.find { |role| role.name == 'Oper' }) == true
+  return 'Owner' if event.user.role?(event.server.roles.find { |role| role.name == 'Owner' }) == true
+  return 'Admin' if event.user.role?(event.server.roles.find { |role| role.name == 'Admins' }) == true
+  return 'Op' if event.user.role?(event.server.roles.find { |role| role.name == 'Ops' }) == true
+  return 'Half-Op' if event.user.role?(event.server.roles.find { |role| role.name == 'Half-ops' }) == true
+  return 'Voiced' if event.user.role?(event.server.roles.find { |role| role.name == 'Voiced' }) == true
+
   'Member'
 end
 
