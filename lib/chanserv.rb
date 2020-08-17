@@ -35,12 +35,12 @@ end
 
 def modes(event)
   modes = []
-  modes[modes.length] = 'B' if event.user.role?(event.server.roles.find { |role| role.name == '+B' }) == true
-  modes[modes.length] = 'Q' if event.user.role?(event.server.roles.find { |role| role.name == '+Q' }) == true
-  modes[modes.length] = 'k' if event.user.role?(event.server.roles.find { |role| role.name == '+k' }) == true
-  modes[modes.length] = 'd' if event.user.role?(event.server.roles.find { |role| role.name == '+d' }) == true
-  modes[modes.length] = 'm' if event.user.role?(event.server.roles.find { |role| role.name == '+m' }) == true
-  modes[modes.length] = 'e' if event.user.role?(event.server.roles.find { |role| role.name == '+e' }) == true
+  modes.push('B') if event.user.role?(event.server.roles.find { |role| role.name == '+B' }) == true
+  modes.push('Q') if event.user.role?(event.server.roles.find { |role| role.name == '+Q' }) == true
+  modes.push('k') if event.user.role?(event.server.roles.find { |role| role.name == '+k' }) == true
+  modes.push('d') if event.user.role?(event.server.roles.find { |role| role.name == '+d' }) == true
+  modes.push('m') if event.user.role?(event.server.roles.find { |role| role.name == '+m' }) == true
+  modes.push('e') if event.user.role?(event.server.roles.find { |role| role.name == '+e' }) == true
   modes
 end
 
