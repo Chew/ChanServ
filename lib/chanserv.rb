@@ -21,26 +21,26 @@ end
 
 puts 'Done loading plugins! Finalizing start-up'
 
-def role(event)
-  return 'Member' if event.user.roles.count.zero?
-  return 'Oper' if event.user.role?(event.server.roles.find { |role| role.name == 'Oper' }) == true
-  return 'Owner' if event.user.role?(event.server.roles.find { |role| role.name == 'Owner' }) == true
-  return 'Admin' if event.user.role?(event.server.roles.find { |role| role.name == 'Admins' }) == true
-  return 'Op' if event.user.role?(event.server.roles.find { |role| role.name == 'Ops' }) == true
-  return 'Half-Op' if event.user.role?(event.server.roles.find { |role| role.name == 'Half-ops' }) == true
-  return 'Voiced' if event.user.role?(event.server.roles.find { |role| role.name == 'Voiced' }) == true
+def role(member, server)
+  return 'Member' if member.roles.count.zero?
+  return 'Oper' if member.role?(server.roles.find { |role| role.name == 'Oper' }) == true
+  return 'Owner' if member.role?(server.roles.find { |role| role.name == 'Owner' }) == true
+  return 'Admin' if member.role?(server.roles.find { |role| role.name == 'Admins' }) == true
+  return 'Op' if member.role?(server.roles.find { |role| role.name == 'Ops' }) == true
+  return 'Half-Op' if member.role?(server.roles.find { |role| role.name == 'Half-ops' }) == true
+  return 'Voiced' if member.role?(server.roles.find { |role| role.name == 'Voiced' }) == true
 
   'Member'
 end
 
-def modes(event)
+def modes(member, server)
   modes = []
-  modes.push('B') if event.user.role?(event.server.roles.find { |role| role.name == '+B' }) == true
-  modes.push('Q') if event.user.role?(event.server.roles.find { |role| role.name == '+Q' }) == true
-  modes.push('k') if event.user.role?(event.server.roles.find { |role| role.name == '+k' }) == true
-  modes.push('d') if event.user.role?(event.server.roles.find { |role| role.name == '+d' }) == true
-  modes.push('m') if event.user.role?(event.server.roles.find { |role| role.name == '+m' }) == true
-  modes.push('e') if event.user.role?(event.server.roles.find { |role| role.name == '+e' }) == true
+  modes.push('B') if member.role?(server.roles.find { |role| role.name == '+B' }) == true
+  modes.push('Q') if member.role?(server.roles.find { |role| role.name == '+Q' }) == true
+  modes.push('k') if member.role?(server.roles.find { |role| role.name == '+k' }) == true
+  modes.push('d') if member.role?(server.roles.find { |role| role.name == '+d' }) == true
+  modes.push('m') if member.role?(server.roles.find { |role| role.name == '+m' }) == true
+  modes.push('e') if member.role?(server.roles.find { |role| role.name == '+e' }) == true
   modes
 end
 
@@ -93,7 +93,9 @@ Bot.member_leave do |event|
 end
 
 Bot.message(includes: 'discord.gg') do |event|
-  next if %w[Oper Owner Admin Op].include? role(event).to_s
+  next if event.server.nil?
+  next if %w[Oper Owner Admin Op].include? role(event.author, event.server).to_s
+
   message = event.message.to_s
   if message.include?('discord.gg')
     event.message.delete
@@ -102,8 +104,10 @@ Bot.message(includes: 'discord.gg') do |event|
 end
 
 Bot.message(includes: '') do |event|
-  next if %w[Oper Owner Admin Op].include? role(event).to_s
+  next if event.server.nil?
+  next if %w[Oper Owner Admin Op].include? role(event.author, event.server).to_s
   next unless [134_445_052_805_120_001, 235_175_875_732_176_896, 421_472_240_169_910_282].include? event.channel.id.to_i
+
   message = event.message.to_s
   message.downcase!
   swears = File.readlines('swears.txt') { |line| line.split.map(&:to_s).join }
