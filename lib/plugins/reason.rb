@@ -2,7 +2,7 @@ module Reason
   extend Discordrb::Commands::CommandContainer
 
   command(:reason, min_args: 2) do |event, caseid, *reason|
-    unless %w[Oper Owner Admin Op Half-Op].include? role(event).to_s
+    unless %w[Oper Owner Admin Op Half-Op].include? role(event.user, event.server).to_s
       event.channel.send_embed do |e|
         e.title = '**Permission Error**'
 

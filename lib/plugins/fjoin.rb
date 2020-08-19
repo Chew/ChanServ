@@ -2,7 +2,7 @@ module FJoin
   extend Discordrb::Commands::CommandContainer
 
   command(:fjoin, min_args: 2, max_args: 2) do |event, mention, join|
-    unless %w[Oper].include? role(event).to_s
+    unless %w[Oper].include? role(event.user, event.server).to_s
       event.channel.send_embed do |e|
         e.title = '**Permission Error**'
 

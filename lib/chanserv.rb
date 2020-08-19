@@ -21,7 +21,7 @@ end
 
 puts 'Done loading plugins! Finalizing start-up'
 
-def role(member, server)
+def role(member, server = Bot.server(134445052805120001))
   return 'Member' if member.roles.count.zero?
   return 'Oper' if member.role?(server.roles.find { |role| role.name == 'Oper' }) == true
   return 'Owner' if member.role?(server.roles.find { |role| role.name == 'Owner' }) == true

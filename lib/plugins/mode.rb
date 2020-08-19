@@ -2,7 +2,7 @@ module Mode
   extend Discordrb::Commands::CommandContainer
 
   command(:mode, min_args: 2, max_args: 2) do |event, mention, mode|
-    unless %w[Oper Owner Admin].include? role(event).to_s
+    unless %w[Oper Owner Admin].include? role(event.user, event.server).to_s
       event.channel.send_embed do |e|
         e.title = '**Permission Error**'
 

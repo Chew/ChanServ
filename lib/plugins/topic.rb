@@ -2,7 +2,7 @@ module Topic
   extend Discordrb::Commands::CommandContainer
 
   command(:topic, min_args: 1) do |event, *topic|
-    next unless %w[Oper Owner Admin Op Half-Op].include? role(event).to_s
+    next unless %w[Oper Owner Admin Op Half-Op].include? role(event.user, event.server).to_s
     mode = event.channel.topic.split(' ')[0]
     event.channel.topic = mode + ' ' + topic.join(' ')
     event.channel.send_embed do |e|

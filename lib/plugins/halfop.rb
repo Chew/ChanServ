@@ -2,7 +2,7 @@ module HalfOp
   extend Discordrb::Commands::CommandContainer
 
   command(:halfop, min_args: 1, max_args: 1) do |event, mention|
-    unless %w[Oper Owner Admin Op].include? role(event).to_s
+    unless %w[Oper Owner Admin Op].include? role(event.user, event.server).to_s
       event.channel.send_embed do |e|
         e.title = '**Permission Error**'
 
