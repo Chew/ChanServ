@@ -8,7 +8,7 @@ Bot = Discordrb::Commands::CommandBot.new token: CONFIG['token'],
                                           prefix: CONFIG['prefix'],
                                           help_command: false
 
-Dir["#{File.dirname(__FILE__)}/plugins/*.rb"].each do |wow|
+Dir["#{File.dirname(__FILE__)}/plugins/*.rb"].sort.each do |wow|
   require wow
   load wow
   bob = File.readlines(wow) { |line| line.split.map(&:to_s).join }
@@ -21,26 +21,53 @@ end
 
 puts 'Done loading plugins! Finalizing start-up'
 
-def role(member, server = Bot.server(134445052805120001))
+ROLES = {
+  "+k" => 420725473602174996,
+  "Oper" => 708085586489245757,
+  "NetAdmin" => 424381316688117760,
+  "Owner" => 708085624514543728,
+  "Admins" => 428372679356055574,
+  "Ops" => 319161007010480129,
+  "Half-Ops" => 319160664822120451,
+  "Voiced" => 708088239310897263,
+  "+B" => 363809388697354253,
+  "+Q" => 575490034061279239,
+  "+d" => 423987790854881290,
+  "+e" => 424364607893930005,
+  "+m" => 424008605902045185,
+  "+r" => 478028312472453122,
+  "+w" => 437705588064124948
+}.freeze
+
+def role(member, _)
   return 'Member' if member.roles.count.zero?
-  return 'Oper' if member.role?(server.roles.find { |role| role.name == 'Oper' }) == true
-  return 'Owner' if member.role?(server.roles.find { |role| role.name == 'Owner' }) == true
-  return 'Admin' if member.role?(server.roles.find { |role| role.name == 'Admins' }) == true
-  return 'Op' if member.role?(server.roles.find { |role| role.name == 'Ops' }) == true
-  return 'Half-Op' if member.role?(server.roles.find { |role| role.name == 'Half-ops' }) == true
-  return 'Voiced' if member.role?(server.roles.find { |role| role.name == 'Voiced' }) == true
+  return 'Oper' if member.role?(ROLES['Oper']) == true
+  return 'Owner' if member.role?(ROLES['Owner']) == true
+  return 'Admin' if member.role?(ROLES['Admins']) == true
+  return 'Op' if member.role?(ROLES['Ops']) == true
+  return 'Half-Op' if member.role?(ROLES['Half-ops']) == true
+  return 'Voiced' if member.role?(ROLES['Voiced']) == true
 
   'Member'
 end
 
-def modes(member, server)
+def modes(member, _)
   modes = []
-  modes.push('B') if member.role?(server.roles.find { |role| role.name == '+B' }) == true
-  modes.push('Q') if member.role?(server.roles.find { |role| role.name == '+Q' }) == true
-  modes.push('k') if member.role?(server.roles.find { |role| role.name == '+k' }) == true
-  modes.push('d') if member.role?(server.roles.find { |role| role.name == '+d' }) == true
-  modes.push('m') if member.role?(server.roles.find { |role| role.name == '+m' }) == true
-  modes.push('e') if member.role?(server.roles.find { |role| role.name == '+e' }) == true
+  modes.push('Y') if member.role?(ROLES['Oper']) == true
+  modes.push('q') if member.role?(ROLES['Owner']) == true
+  modes.push('a') if member.role?(ROLES['Admins']) == true
+  modes.push('o') if member.role?(ROLES['Ops']) == true
+  modes.push('h') if member.role?(ROLES['Half-ops']) == true
+  modes.push('v') if member.role?(ROLES['Voiced']) == true
+  modes.push('B') if member.role?(ROLES['+B']) == true
+  modes.push('Q') if member.role?(ROLES['+Q']) == true
+  modes.push('k') if member.role?(ROLES['+k']) == true
+  modes.push('d') if member.role?(ROLES['+d']) == true
+  modes.push('m') if member.role?(ROLES['+m']) == true
+  modes.push('e') if member.role?(ROLES['+e']) == true
+  modes.push('e') if member.role?(ROLES['+w']) == true
+  modes.push('e') if member.role?(ROLES['+n']) == true
+  modes.push('e') if member.role?(ROLES['+r']) == true
   modes
 end
 
