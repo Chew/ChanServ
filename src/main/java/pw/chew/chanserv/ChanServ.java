@@ -59,6 +59,7 @@ public class ChanServ {
         // Set the client settings
         client.setOwnerId(PropertiesManager.getOwnerId());
         client.setPrefix(PropertiesManager.getPrefix());
+        client.setActivity(Activity.watching("rory"));
 
         client.useHelpBuilder(false);
 
