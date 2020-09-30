@@ -27,7 +27,7 @@ public class AuditLogManager {
             return;
         }
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle(type + " | Case #" + cases.size());
+        embed.setTitle(type.name + " | Case #" + cases.size());
         embed.setColor(switch (type) {
             case BAN, KICK -> Color.RED;
             case UN_BAN -> Color.GREEN;
