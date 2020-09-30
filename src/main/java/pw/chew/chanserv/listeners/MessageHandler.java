@@ -16,6 +16,10 @@ public class MessageHandler extends ListenerAdapter {
             return;
         }
 
+        if (event.getChannel().getId().equals("751903362794127470") && !event.getMessage().getContentRaw().equals("uwu")) {
+            event.getMessage().delete().queue();
+        }
+
         // TODO: Swear code here.
     }
 }
