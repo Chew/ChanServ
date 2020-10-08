@@ -52,4 +52,11 @@ public class PropertiesManager {
     public static String getPrefix() {
         return properties.getProperty("prefix");
     }
+
+    /**
+     * @return key to upload rories
+     */
+    public static String getRoryKey() {
+        return properties.getProperty("rory_key");
+    }
 }
