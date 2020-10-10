@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import pw.chew.chanserv.listeners.BanHandler;
 import pw.chew.chanserv.listeners.MemberJoinHandler;
 import pw.chew.chanserv.listeners.MemberLeaveHandler;
+import pw.chew.chanserv.listeners.MessageEditHandler;
 import pw.chew.chanserv.listeners.MessageHandler;
 import pw.chew.chanserv.listeners.ReadyHandler;
 import pw.chew.chanserv.listeners.UnbanHandler;
@@ -79,6 +80,7 @@ public class ChanServ {
                 new BanHandler(),
                 new MemberJoinHandler(),
                 new MemberLeaveHandler(),
+                new MessageEditHandler(),
                 new MessageHandler(),
                 new ReadyHandler(),
                 new UnbanHandler()
