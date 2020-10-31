@@ -20,6 +20,7 @@ public class MessageHandler extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+        // Discord Invite
         if (event.getMessage().getContentRaw().contains("discord.gg") || event.getMessage().getContentRaw().contains("discordapp.com/invite")) {
             if (event.getMember() != null && MemberHelper.getRank(event.getMember()).getPriority() >= 3)
                 return;
@@ -29,7 +30,8 @@ public class MessageHandler extends ListenerAdapter {
             return;
         }
 
-        if (event.getChannel().getId().equals("751903362794127470") && !event.getMessage().getContentRaw().equals("uwu")) {
+        // #uwu
+        if (event.getChannel().getId().equals("751903362794127470") && !event.getMessage().getContentRaw().equalsIgnoreCase("uwu")) {
             event.getMessage().delete().queue();
         }
 
