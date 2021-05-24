@@ -15,6 +15,7 @@ public class RandomColorCommand extends SlashCommand {
         this.guildOnly = true;
         this.guildId = "134445052805120001";
         this.cooldown = 21600;
+        this.help = "Get a random color for your name (can only be used every 6 hours)";
     }
 
     @Override

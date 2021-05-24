@@ -9,6 +9,7 @@ public class RankCommand extends SlashCommand {
         this.name = "rank";
         this.guildOnly = true;
         this.guildId = "134445052805120001";
+        this.help = "Get your current rank.";
     }
 
     @Override

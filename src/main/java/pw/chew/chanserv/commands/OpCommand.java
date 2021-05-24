@@ -19,6 +19,7 @@ public class OpCommand extends SlashCommand {
         this.name = "op";
         this.guildOnly = true;
         this.guildId = "134445052805120001";
+        this.help = "Promote a user to Op (requires Admin+)";
 
         List<OptionData> data = new ArrayList<>();
         data.add(

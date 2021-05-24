@@ -19,6 +19,7 @@ public class HalfopCommand extends SlashCommand {
         this.name = "halfop";
         this.guildOnly = true;
         this.guildId = "134445052805120001";
+        this.help = "Promote a user to half-op (requires Op+)";
 
         List<OptionData> data = new ArrayList<>();
         data.add(

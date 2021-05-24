@@ -20,13 +20,13 @@ public class ReasonCommand extends SlashCommand {
         this.name = "reason";
         this.guildOnly = true;
         this.guildId = "134445052805120001";
+        this.help = "Set a reason for a audit log entry (Requires half-op+)";
 
         List<OptionData> data = new ArrayList<>();
         data.add(new OptionData(OptionType.INTEGER, "case", "The case to update.").setRequired(true));
         data.add(new OptionData(OptionType.STRING, "reason", "The reason to set the log to.").setRequired(true));
 
         this.options = data;
-
     }
 
     @Override

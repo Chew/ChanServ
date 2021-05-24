@@ -19,6 +19,7 @@ public class OwnerCommand extends SlashCommand {
         this.name = "owner";
         this.guildOnly = true;
         this.guildId = "134445052805120001";
+        this.help = "Promote a user to Owner (requires Oper/NetAdmin)";
 
         List<OptionData> data = new ArrayList<>();
         data.add(

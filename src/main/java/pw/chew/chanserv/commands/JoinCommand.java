@@ -15,6 +15,7 @@ public class JoinCommand extends SlashCommand {
         this.name = "join";
         this.guildOnly = true;
         this.guildId = "134445052805120001";
+        this.help = "Join a specified community channel.";
 
         OptionData data = new OptionData(OptionType.STRING, "community", "The community to join.")
             .setRequired(true);

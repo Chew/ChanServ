@@ -17,6 +17,7 @@ public class TopicCommand extends SlashCommand {
         this.name = "topic";
         this.guildOnly = true;
         this.guildId = "134445052805120001";
+        this.help = "Change the topic of a channel (requires Half-op+)";
 
         List<OptionData> data = new ArrayList<>();
         data.add(new OptionData(OptionType.STRING, "topic", "The topic to set.").setRequired(true));

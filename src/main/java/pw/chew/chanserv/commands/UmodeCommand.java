@@ -11,6 +11,7 @@ public class UmodeCommand extends SlashCommand {
         this.name = "umode";
         this.guildOnly = true;
         this.guildId = "134445052805120001";
+        this.help = "Gets your user modes.";
     }
 
     @Override

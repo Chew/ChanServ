@@ -19,6 +19,7 @@ public class AdminCommand extends SlashCommand {
         this.name = "admin";
         this.guildOnly = true;
         this.guildId = "134445052805120001";
+        this.help = "Promote a user to Admin (requires Owner+)";
 
         List<OptionData> data = new ArrayList<>();
         data.add(

@@ -21,6 +21,7 @@ public class KickCommand extends SlashCommand {
         this.name = "kick";
         this.guildOnly = true;
         this.guildId = "134445052805120001";
+        this.help = "Kick a specified user (requires Half-op+)";
 
         List<OptionData> data = new ArrayList<>();
         data.add(new OptionData(OptionType.USER, "user", "The user to kick.").setRequired(true));

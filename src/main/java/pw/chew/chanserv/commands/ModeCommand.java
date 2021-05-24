@@ -20,6 +20,7 @@ public class ModeCommand extends SlashCommand {
         this.name = "mode";
         this.guildOnly = true;
         this.guildId = "134445052805120001";
+        this.help = "Change a specified user's modes (requires Admin+)";
 
         List<OptionData> data = new ArrayList<>();
         data.add(new OptionData(OptionType.USER, "user", "The user to promote to voiced.").setRequired(true));

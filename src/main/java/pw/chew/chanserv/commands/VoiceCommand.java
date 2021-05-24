@@ -19,6 +19,7 @@ public class VoiceCommand extends SlashCommand {
         this.name = "voice";
         this.guildOnly = true;
         this.guildId = "134445052805120001";
+        this.help = "Promote a user to voiced (requires half-op+)";
 
         List<OptionData> data = new ArrayList<>();
         data.add(new OptionData(OptionType.USER, "user", "The user to promote to voiced.").setRequired(true));

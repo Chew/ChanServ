@@ -17,6 +17,7 @@ public class ListCommunitiesCommand extends SlashCommand {
         this.botPermissions = new Permission[]{Permission.MESSAGE_EMBED_LINKS};
         this.cooldown = 30;
         this.cooldownScope = CooldownScope.CHANNEL;
+        this.help = "Command to list communities.";
     }
 
     @Override
