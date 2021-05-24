@@ -1,33 +1,42 @@
 package pw.chew.chanserv.commands;
 
-import com.jagrosh.jdautilities.command.Command;
-import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.SlashCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import pw.chew.chanserv.util.MemberHelper;
 
-import java.awt.*;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
-public class TopicCommand extends Command {
+public class TopicCommand extends SlashCommand {
     public TopicCommand() {
         this.name = "topic";
         this.guildOnly = true;
+        this.guildId = "134445052805120001";
+
+        List<OptionData> data = new ArrayList<>();
+        data.add(new OptionData(OptionType.STRING, "topic", "The topic to set.").setRequired(true));
+        this.options = data;
     }
 
     @Override
-    protected void execute(CommandEvent event) {
+    protected void execute(SlashCommandEvent event) {
         if (MemberHelper.getRank(event.getMember()).getPriority() >= 2) {
             String currentTopic = event.getTextChannel().getTopic();
             if (currentTopic == null) {
                 currentTopic = fixTopic(event.getTextChannel());
             }
             String mode = currentTopic.split(" ")[0];
-            event.getTextChannel().getManager().setTopic(mode + ' ' + event.getArgs()).queue(channel -> {
+            event.getTextChannel().getManager().setTopic(mode + ' ' + event.getOption("topic").getAsString()).queue(channel -> {
                 event.reply(new EmbedBuilder()
-                    .setTitle("**" + event.getAuthor().getName() + " set the topic**")
-                    .setDescription(event.getArgs())
+                    .setTitle("**" + event.getUser().getName() + " set the topic**")
+                    .setDescription(event.getOption("topic").getAsString())
                     .setColor(Color.GREEN).build()
-                );
+                ).queue();
             });
         }
     }

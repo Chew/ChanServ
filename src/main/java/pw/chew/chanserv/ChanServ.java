@@ -18,7 +18,9 @@ package pw.chew.chanserv;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
+import com.jagrosh.jdautilities.command.SlashCommand;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
@@ -47,6 +49,8 @@ import java.util.Properties;
 import java.util.Set;
 
 public class ChanServ {
+    private static JDA jda;
+
     public static void main(String[] args) throws IOException, LoginException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         // Load properties into the PropertiesManager
         Properties prop = new Properties();
@@ -65,9 +69,10 @@ public class ChanServ {
         client.useHelpBuilder(false);
 
         client.addCommands(getCommands());
+        client.addSlashCommands(getSlashCommands());
 
         // Register JDA
-        JDABuilder.createDefault(PropertiesManager.getToken())
+        jda = JDABuilder.createDefault(PropertiesManager.getToken())
             .setChunkingFilter(ChunkingFilter.ALL)
             .setMemberCachePolicy(MemberCachePolicy.ALL)
             .enableIntents(GatewayIntent.GUILD_MEMBERS)
@@ -88,6 +93,10 @@ public class ChanServ {
             .build();
     }
 
+    public static JDA getJDA() {
+        return jda;
+    }
+
     private static Command[] getCommands() throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         Reflections reflections = new Reflections("pw.chew.chanserv.commands");
         Set<Class<? extends Command>> subTypes = reflections.getSubTypesOf(Command.class);
@@ -99,5 +108,18 @@ public class ChanServ {
         }
 
         return commands.toArray(new Command[0]);
+    }
+
+    private static SlashCommand[] getSlashCommands() throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+        Reflections reflections = new Reflections("pw.chew.chanserv.commands");
+        Set<Class<? extends SlashCommand>> subTypes = reflections.getSubTypesOf(SlashCommand.class);
+        List<SlashCommand> commands = new ArrayList<>();
+
+        for (Class<? extends SlashCommand> theClass : subTypes) {
+            commands.add(theClass.getDeclaredConstructor().newInstance());
+            LoggerFactory.getLogger(theClass).debug("Loaded Successfully!");
+        }
+
+        return commands.toArray(new SlashCommand[0]);
     }
 }

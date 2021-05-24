@@ -40,7 +40,7 @@ public class AuditLogManager {
             embed.addField("Responsible Staff", "[Unknown]", true);
         else
             embed.addField("Responsible Staff", actor.getAsMention(), true);
-        embed.addField("Reason", "Responsible staff please add reason by `;reason case# [reason]`", true);
+        embed.addField("Reason", "Responsible staff please add reason by `/reason case# [reason]`", true);
 
         auditLogChannel.sendMessage(embed.build()).queue(msg -> FileManager.appendLine(fileName, msg.getId() + "\n"));
     }

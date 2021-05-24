@@ -1,29 +1,36 @@
 package pw.chew.chanserv.commands;
 
-import com.jagrosh.jdautilities.command.Command;
-import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.SlashCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import pw.chew.chanserv.util.AuditLogManager;
 import pw.chew.chanserv.util.MemberHelper;
-import pw.chew.chanserv.util.MessageHelper;
 
 import java.awt.Color;
-import java.io.File;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReasonCommand extends Command {
+public class ReasonCommand extends SlashCommand {
 
     public ReasonCommand() {
         this.name = "reason";
         this.guildOnly = true;
+        this.guildId = "134445052805120001";
+
+        List<OptionData> data = new ArrayList<>();
+        data.add(new OptionData(OptionType.INTEGER, "case", "The case to update.").setRequired(true));
+        data.add(new OptionData(OptionType.STRING, "reason", "The reason to set the log to.").setRequired(true));
+
+        this.options = data;
+
     }
 
     @Override
-    protected void execute(CommandEvent event) {
+    protected void execute(SlashCommandEvent event) {
         if (MemberHelper.getRank(event.getMember()).getPriority() < 2) {
             event.reply(
                 new EmbedBuilder()
@@ -31,17 +38,15 @@ public class ReasonCommand extends Command {
                     .setDescription("You do not have the proper user modes to do this! You must have +h (half-op) or higher.")
                     .setColor(Color.RED)
                     .build()
-            );
+            ).setEphemeral(true).queue();
             return;
         }
 
-        event.getMessage().delete().queue();
-
-        int caseId = Integer.parseInt(event.getArgs().split(" ")[0]);
-        String reason = event.getArgs().replace(caseId + " ", "");
+        int caseId = (int) event.getOption("case").getAsLong();
+        String reason = event.getOption("reason").getAsString();
 
         if (caseId < 95) {
-            event.reply("This log happened prior to audit-log 2.0. The reason will not be able to change! Please try again.");
+            event.reply("This log happened prior to audit-log 2.0. The reason will not be able to change! Please try again.").setEphemeral(true).queue();
             return;
         }
 
@@ -57,7 +62,7 @@ public class ReasonCommand extends Command {
                 continue;
             }
             fields.remove(find);
-            fields.add(new MessageEmbed.Field(find.getName(), event.getAuthor().getAsMention(), true));
+            fields.add(new MessageEmbed.Field(find.getName(), event.getUser().getAsMention(), true));
         }
 
         for (MessageEmbed.Field find : fields) {
@@ -84,6 +89,6 @@ public class ReasonCommand extends Command {
         if (color > 0)
             newEmbed.setColor(color);
 
-        message.editMessage(newEmbed.build()).queue(msg -> MessageHelper.sendTemporaryMessage(event.getTextChannel(), "Reason for case " + caseId + " set to: " + reason, 5));
+        message.editMessage(newEmbed.build()).queue(msg -> event.reply("Reason for case " + caseId + " set to: " + reason).setEphemeral(true).queue());
     }
 }

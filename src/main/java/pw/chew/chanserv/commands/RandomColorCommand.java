@@ -1,31 +1,30 @@
 package pw.chew.chanserv.commands;
 
-import com.jagrosh.jdautilities.command.Command;
-import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.SlashCommand;
 import net.dv8tion.jda.api.entities.Role;
-import org.slf4j.LoggerFactory;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.util.List;
 import java.util.Random;
 
-public class RandomColorCommand extends Command {
+public class RandomColorCommand extends SlashCommand {
 
     public RandomColorCommand() {
         this.name = "randomcolor";
         this.cooldownScope = CooldownScope.USER;
         this.guildOnly = true;
+        this.guildId = "134445052805120001";
         this.cooldown = 21600;
     }
 
     @Override
-    protected void execute(CommandEvent event) {
-        event.getChannel().sendTyping().queue();
-        List<Role> role = event.getGuild().getRolesByName(event.getAuthor().getId(), true);
+    protected void execute(SlashCommandEvent event) {
+        List<Role> role = event.getGuild().getRolesByName(event.getUser().getId(), true);
         Random r = new Random();
         int color = r.nextInt((16777215) + 1);
         Role current;
         if (role.isEmpty()) {
-            current = event.getGuild().createRole().setName(event.getAuthor().getId()).setColor(color).complete();
+            current = event.getGuild().createRole().setName(event.getUser().getId()).setColor(color).complete();
             event.getGuild().modifyRolePositions(false).selectPosition(current).moveTo(3).complete();
         } else {
             current = role.get(0);
@@ -34,6 +33,6 @@ public class RandomColorCommand extends Command {
         if (!event.getMember().getRoles().contains(current)) {
             event.getGuild().addRoleToMember(event.getMember(), current).complete();
         }
-        event.reply("Set your role color successfully!");
+        event.reply("Set your role color successfully!").setEphemeral(true).queue();
     }
 }
