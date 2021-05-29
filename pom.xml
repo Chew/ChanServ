@@ -42,7 +42,7 @@
         <dependency>
             <groupId>com.github.dv8fromtheworld</groupId>
             <artifactId>jda</artifactId>
-            <version>feature~slash-commands-v3.7.1-g5951675-657</version>
+            <version>feature~slash-commands-v3.7.1-g757de9b-720</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>

@@ -97,14 +97,19 @@ public class ChanServ {
         return jda;
     }
 
-    private static Command[] getCommands() throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+    private static Command[] getCommands() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         Reflections reflections = new Reflections("pw.chew.chanserv.commands");
         Set<Class<? extends Command>> subTypes = reflections.getSubTypesOf(Command.class);
         List<Command> commands = new ArrayList<>();
 
         for (Class<? extends Command> theClass : subTypes) {
-            commands.add(theClass.getDeclaredConstructor().newInstance());
-            LoggerFactory.getLogger(theClass).debug("Loaded Successfully!");
+            try {
+                commands.add(theClass.getDeclaredConstructor().newInstance());
+                LoggerFactory.getLogger(theClass).debug("Loaded Command Successfully!");
+            } catch (InstantiationException ignored) {
+                // This means there's no execute(CommandEvent event), so it's probably a Slash Command
+                // It's safe to ignore.
+            }
         }
 
         return commands.toArray(new Command[0]);
@@ -117,7 +122,7 @@ public class ChanServ {
 
         for (Class<? extends SlashCommand> theClass : subTypes) {
             commands.add(theClass.getDeclaredConstructor().newInstance());
-            LoggerFactory.getLogger(theClass).debug("Loaded Successfully!");
+            LoggerFactory.getLogger(theClass).debug("Loaded SlashCommand Successfully!");
         }
 
         return commands.toArray(new SlashCommand[0]);

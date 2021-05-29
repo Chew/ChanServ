@@ -18,6 +18,6 @@ public class LeaveCommand extends SlashCommand {
         if (event.getTextChannel().getParent().getId().equals(Community.categoryId)) {
             Community.valueOf(event.getChannel().getName().toUpperCase()).removeMember(event.getMember());
         }
-        event.acknowledge().queue();
+        event.reply("User left the channel...").queue();
     }
 }

@@ -20,6 +20,8 @@ public class AdminCommand extends SlashCommand {
         this.guildOnly = true;
         this.guildId = "134445052805120001";
         this.help = "Promote a user to Admin (requires Owner+)";
+        this.enabledRoles = Roles.Rank.getRoleIdsHigherThan(5);
+        this.defaultEnabled = false;
 
         List<OptionData> data = new ArrayList<>();
         data.add(
@@ -31,7 +33,7 @@ public class AdminCommand extends SlashCommand {
     @Override
     protected void execute(SlashCommandEvent event) {
         if (MemberHelper.getRank(event.getMember()).getPriority() < 5) {
-            event.reply(
+            event.replyEmbeds(
                 new EmbedBuilder()
                     .setTitle("**Permission Error**")
                     .setDescription("You do not have the proper user modes to do this! You must have +q (Owner) or higher.")
@@ -44,7 +46,7 @@ public class AdminCommand extends SlashCommand {
         Member user = event.getOption("user").getAsMember();
         event.getGuild().addRoleToMember(user, Roles.Rank.ADMIN.getRole(event.getGuild())).queue(
             e -> {
-                event.reply(new EmbedBuilder()
+                event.replyEmbeds(new EmbedBuilder()
                     .setTitle("**User Mode Changed Successfully**")
                     .setDescription(user.getAsMention() + " has been promoted to admin by " + event.getUser().getAsMention())
                     .setColor(Color.GREEN)

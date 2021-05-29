@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import pw.chew.chanserv.util.AuditLogManager;
 import pw.chew.chanserv.util.MemberHelper;
+import pw.chew.chanserv.util.Roles;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -22,6 +23,8 @@ public class KickCommand extends SlashCommand {
         this.guildOnly = true;
         this.guildId = "134445052805120001";
         this.help = "Kick a specified user (requires Half-op+)";
+        this.enabledRoles = Roles.Rank.getRoleIdsHigherThan(2);
+        this.defaultEnabled = false;
 
         List<OptionData> data = new ArrayList<>();
         data.add(new OptionData(OptionType.USER, "user", "The user to kick.").setRequired(true));
@@ -32,7 +35,7 @@ public class KickCommand extends SlashCommand {
     @Override
     protected void execute(SlashCommandEvent event) {
         if (MemberHelper.getRank(event.getMember()).getPriority() < 2) {
-            event.reply(
+            event.replyEmbeds(
                 new EmbedBuilder()
                     .setTitle("**Permission Error**")
                     .setDescription("You do not have the proper user modes to do this! You must have +h (half-op) or higher.")
@@ -47,7 +50,7 @@ public class KickCommand extends SlashCommand {
 
         user.kick(reason).queue(userid -> {
             AuditLogManager.logEntry(AuditLogManager.LogType.KICK, user.getUser(), event.getMember(), event.getGuild());
-            event.reply(new EmbedBuilder()
+            event.replyEmbeds(new EmbedBuilder()
                 .setTitle("**User Kicked Successfully**")
                 .setDescription("Say goodbye to that user " + user.getUser().getAsTag())
                 .build()).queue();

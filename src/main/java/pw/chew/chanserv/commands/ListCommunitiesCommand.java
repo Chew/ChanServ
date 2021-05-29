@@ -37,6 +37,6 @@ public class ListCommunitiesCommand extends SlashCommand {
 
         e.setColor(Color.GREEN);
 
-        event.reply(e.build()).setEphemeral(true).queue();
+        event.replyEmbeds(e.build()).setEphemeral(true).queue();
     }
 }

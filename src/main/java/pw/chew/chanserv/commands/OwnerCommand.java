@@ -20,6 +20,8 @@ public class OwnerCommand extends SlashCommand {
         this.guildOnly = true;
         this.guildId = "134445052805120001";
         this.help = "Promote a user to Owner (requires Oper/NetAdmin)";
+        this.enabledRoles = Roles.Rank.getRoleIdsHigherThan(6);
+        this.defaultEnabled = false;
 
         List<OptionData> data = new ArrayList<>();
         data.add(
@@ -31,7 +33,7 @@ public class OwnerCommand extends SlashCommand {
     @Override
     protected void execute(SlashCommandEvent event) {
         if (MemberHelper.getRank(event.getMember()).getPriority() < 6) {
-            event.reply(
+            event.replyEmbeds(
                 new EmbedBuilder()
                     .setTitle("**Permission Error**")
                     .setDescription("You do not have the proper user modes to do this! You must have +Y (Oper) or be a NetAdmin.")
@@ -44,7 +46,7 @@ public class OwnerCommand extends SlashCommand {
         Member user = event.getOption("user").getAsMember();
         event.getGuild().addRoleToMember(user, Roles.Rank.OWNER.getRole(event.getGuild())).queue(
             e -> {
-                event.reply(new EmbedBuilder()
+                event.replyEmbeds(new EmbedBuilder()
                     .setTitle("**User Mode Changed Successfully**")
                     .setDescription(user.getAsMention() + " has been promoted to owner by " + event.getUser().getAsMention())
                     .setColor(Color.GREEN)

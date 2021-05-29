@@ -20,6 +20,8 @@ public class VoiceCommand extends SlashCommand {
         this.guildOnly = true;
         this.guildId = "134445052805120001";
         this.help = "Promote a user to voiced (requires half-op+)";
+        this.enabledRoles = Roles.Rank.getRoleIdsHigherThan(2);
+        this.defaultEnabled = false;
 
         List<OptionData> data = new ArrayList<>();
         data.add(new OptionData(OptionType.USER, "user", "The user to promote to voiced.").setRequired(true));
@@ -29,7 +31,7 @@ public class VoiceCommand extends SlashCommand {
     @Override
     protected void execute(SlashCommandEvent event) {
         if (MemberHelper.getRank(event.getMember()).getPriority() < 2) {
-            event.reply(
+            event.replyEmbeds(
                 new EmbedBuilder()
                     .setTitle("**Permission Error**")
                     .setDescription("You do not have the proper user modes to do this! You must have +h (half-op) or higher.")
@@ -42,7 +44,7 @@ public class VoiceCommand extends SlashCommand {
         Member user = event.getOption("user").getAsMember();
         event.getGuild().addRoleToMember(user, Roles.Rank.VOICED.getRole(event.getGuild())).queue(
             e -> {
-                event.reply(new EmbedBuilder()
+                event.replyEmbeds(new EmbedBuilder()
                     .setTitle("**User Mode Changed Successfully**")
                     .setDescription(user.getAsMention() + " has been voiced by " + event.getUser().getAsMention())
                     .setColor(Color.GREEN)

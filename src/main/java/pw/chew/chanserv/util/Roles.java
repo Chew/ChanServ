@@ -1,12 +1,12 @@
 package pw.chew.chanserv.util;
 
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import org.slf4j.LoggerFactory;
 
-import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Roles {
     public enum Rank {
@@ -39,6 +39,30 @@ public class Roles {
 
         public int getPriority() {
             return priority;
+        }
+
+        /**
+         * Gets a list of role IDs whose priority is higher than (and include) the priority.
+         * @param priority the priority to check >= to
+         * @return the roles
+         */
+        public static String[] getRoleIdsHigherThan(int priority) {
+            List<String> roles = new ArrayList<>();
+            for (Rank rank : values()) {
+                if (rank.getPriority() >= priority) {
+                    roles.add(rank.getRoleId());
+                }
+            }
+            return roles.toArray(new String[0]);
+        }
+
+        /**
+         * Gets a list of role IDs whose priority is higher than (and include) the priority.
+         * @param rank the rank to start against
+         * @return a list of role IDs
+         */
+        public static String[] getRankIdsGreaterThanOrEqualTo(Rank rank) {
+            return getRoleIdsHigherThan(rank.getPriority());
         }
         
         public Role getRole(Guild guild) {

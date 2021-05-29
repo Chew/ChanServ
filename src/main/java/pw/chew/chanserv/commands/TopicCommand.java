@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import pw.chew.chanserv.util.MemberHelper;
+import pw.chew.chanserv.util.Roles;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ public class TopicCommand extends SlashCommand {
         this.guildOnly = true;
         this.guildId = "134445052805120001";
         this.help = "Change the topic of a channel (requires Half-op+)";
+        this.enabledRoles = Roles.Rank.getRoleIdsHigherThan(2);
+        this.defaultEnabled = false;
 
         List<OptionData> data = new ArrayList<>();
         data.add(new OptionData(OptionType.STRING, "topic", "The topic to set.").setRequired(true));
@@ -33,7 +36,7 @@ public class TopicCommand extends SlashCommand {
             }
             String mode = currentTopic.split(" ")[0];
             event.getTextChannel().getManager().setTopic(mode + ' ' + event.getOption("topic").getAsString()).queue(channel -> {
-                event.reply(new EmbedBuilder()
+                event.replyEmbeds(new EmbedBuilder()
                     .setTitle("**" + event.getUser().getName() + " set the topic**")
                     .setDescription(event.getOption("topic").getAsString())
                     .setColor(Color.GREEN).build()
