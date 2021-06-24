@@ -1,5 +1,6 @@
 package pw.chew.chanserv.listeners;
 
+import net.dv8tion.jda.api.entities.Invite;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -14,6 +15,7 @@ import pw.chew.chanserv.util.MemberHelper;
 import pw.chew.chanserv.util.PropertiesManager;
 
 import java.io.IOException;
+import java.util.List;
 
 public class MessageHandler extends ListenerAdapter {
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -21,13 +23,22 @@ public class MessageHandler extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         // Discord Invite
-        if (event.getMessage().getContentRaw().contains("discord.gg") || event.getMessage().getContentRaw().contains("discordapp.com/invite")) {
+        List<String> invites = event.getMessage().getInvites();
+        if (!invites.isEmpty()) {
             if (event.getMember() != null && MemberHelper.getRank(event.getMember()).getPriority() >= 3)
                 return;
 
-            event.getMessage().delete().queue();
-            event.getChannel().sendMessage(event.getAuthor().getAsTag() + ", discord link postings are disabled!").queue();
-            return;
+            for (String invite : invites) {
+                Invite.resolve(event.getJDA(), invite).queue(invite1 -> {
+                    if (invite1.getGuild() == null) return;
+
+                    if (!invite1.getGuild().getId().equals(event.getGuild().getId())) {
+                        event.getMessage().delete().queue();
+                        event.getChannel().sendMessage(event.getAuthor().getAsTag() + ", discord link postings are disabled!").queue();
+                    }
+                }, throwable -> {
+                });
+            }
         }
 
         // #uwu
