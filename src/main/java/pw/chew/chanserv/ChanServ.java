@@ -64,12 +64,13 @@ public class ChanServ {
         // Set the client settings
         client.setOwnerId(PropertiesManager.getOwnerId());
         client.setPrefix(PropertiesManager.getPrefix());
-        client.setActivity(Activity.watching("rory"));
+        client.setActivity(Activity.watching("rory!!"));
 
         client.useHelpBuilder(false);
 
-        client.addCommands(getCommands());
         client.addSlashCommands(getSlashCommands());
+
+        client.forceGuildOnly("134445052805120001");
 
         // Register JDA
         jda = JDABuilder.createDefault(PropertiesManager.getToken())
@@ -95,24 +96,6 @@ public class ChanServ {
 
     public static JDA getJDA() {
         return jda;
-    }
-
-    private static Command[] getCommands() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        Reflections reflections = new Reflections("pw.chew.chanserv.commands");
-        Set<Class<? extends Command>> subTypes = reflections.getSubTypesOf(Command.class);
-        List<Command> commands = new ArrayList<>();
-
-        for (Class<? extends Command> theClass : subTypes) {
-            try {
-                commands.add(theClass.getDeclaredConstructor().newInstance());
-                LoggerFactory.getLogger(theClass).debug("Loaded Command Successfully!");
-            } catch (InstantiationException ignored) {
-                // This means there's no execute(CommandEvent event), so it's probably a Slash Command
-                // It's safe to ignore.
-            }
-        }
-
-        return commands.toArray(new Command[0]);
     }
 
     private static SlashCommand[] getSlashCommands() throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {

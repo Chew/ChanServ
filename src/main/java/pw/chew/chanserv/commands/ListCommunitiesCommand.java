@@ -12,11 +12,6 @@ public class ListCommunitiesCommand extends SlashCommand {
 
     public ListCommunitiesCommand() {
         this.name = "listcommunities";
-        this.guildOnly = true;
-        this.guildId = "134445052805120001";
-        this.botPermissions = new Permission[]{Permission.MESSAGE_EMBED_LINKS};
-        this.cooldown = 30;
-        this.cooldownScope = CooldownScope.CHANNEL;
         this.help = "Command to list communities.";
     }
 

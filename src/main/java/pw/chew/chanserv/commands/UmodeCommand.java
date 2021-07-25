@@ -9,8 +9,6 @@ import java.util.List;
 public class UmodeCommand extends SlashCommand {
     public UmodeCommand() {
         this.name = "umode";
-        this.guildOnly = true;
-        this.guildId = "134445052805120001";
         this.help = "Gets your user modes.";
     }
 

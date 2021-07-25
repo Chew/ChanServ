@@ -42,7 +42,7 @@ public class AuditLogManager {
             embed.addField("Responsible Staff", actor.getAsMention(), true);
         embed.addField("Reason", "Responsible staff please add reason by `/reason case# [reason]`", true);
 
-        auditLogChannel.sendMessage(embed.build()).queue(msg -> FileManager.appendLine(fileName, msg.getId() + "\n"));
+        auditLogChannel.sendMessageEmbeds(embed.build()).queue(msg -> FileManager.appendLine(fileName, msg.getId() + "\n"));
     }
 
     public static void logEntry(@NotNull LogType type, @NotNull User target, @Nullable Member actor, @NotNull Guild server) {

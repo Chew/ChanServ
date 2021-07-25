@@ -7,25 +7,19 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import pw.chew.chanserv.util.AuditLogManager;
-import pw.chew.chanserv.util.MemberHelper;
 import pw.chew.chanserv.util.Roles;
+import pw.chew.chewbotcca.util.ResponseHelper;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 public class ModeCommand extends SlashCommand {
 
     public ModeCommand() {
         this.name = "mode";
-        this.guildOnly = true;
-        this.guildId = "134445052805120001";
         this.help = "Change a specified user's modes (requires Admin+)";
         this.enabledRoles = Roles.Rank.getRoleIdsHigherThan(4);
         this.defaultEnabled = false;
-
-        List<OptionData> data = new ArrayList<>();
-        data.add(new OptionData(OptionType.USER, "user", "The user to promote to voiced.").setRequired(true));
 
         OptionData modes = new OptionData(OptionType.STRING, "mode", "The mode to give.").setRequired(true);
         for (Roles.UserMode mode : Roles.UserMode.values()) {
@@ -34,26 +28,17 @@ public class ModeCommand extends SlashCommand {
                 modes.addChoice("-" + mode.name(),"-" + mode.name());
             }
         }
-        data.add(modes);
 
-        this.options = data;
+        this.options = Arrays.asList(
+            new OptionData(OptionType.USER, "user", "The user to promote to voiced.").setRequired(true),
+            modes
+        );
     }
 
     @Override
     protected void execute(SlashCommandEvent event) {
-        if (MemberHelper.getRank(event.getMember()).getPriority() < 4) {
-            event.replyEmbeds(
-                new EmbedBuilder()
-                    .setTitle("**Permission Error**")
-                    .setDescription("You do not have the proper user modes to do this! You must have +a (Admin) or higher.")
-                    .setColor(Color.RED)
-                    .build()
-            ).setEphemeral(true).queue();
-            return;
-        }
-
         Member user = event.getOption("user").getAsMember();
-        String mode = event.getOption("mode").getAsString();
+        String mode = ResponseHelper.guaranteeStringOption(event, "mode", "");
         if (mode.length() > 2) {
             boolean add = mode.charAt(0) == '+';
             String modetemp = mode.substring(1);

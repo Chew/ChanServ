@@ -8,8 +8,6 @@ public class LeaveCommand extends SlashCommand {
 
     public LeaveCommand() {
         this.name = "leave";
-        this.guildOnly = true;
-        this.guildId = "134445052805120001";
         this.help = "Leave a community channel (must be ran in the channel.)";
     }
 

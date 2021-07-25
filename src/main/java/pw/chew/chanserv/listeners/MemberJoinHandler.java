@@ -21,6 +21,6 @@ public class MemberJoinHandler extends ListenerAdapter {
 
         embed.setFooter("Member Count: " + event.getGuild().getMemberCount());
 
-        channel.sendMessage(embed.build()).queue();
+        channel.sendMessageEmbeds(embed.build()).queue();
     }
 }

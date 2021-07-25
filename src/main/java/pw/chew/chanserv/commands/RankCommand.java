@@ -8,8 +8,6 @@ import pw.chew.chanserv.util.MemberHelper;
 public class RankCommand extends SlashCommand {
     public RankCommand() {
         this.name = "rank";
-        this.guildOnly = true;
-        this.guildId = "134445052805120001";
         this.help = "Get your current rank.";
     }
 

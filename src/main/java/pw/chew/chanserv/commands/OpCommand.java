@@ -7,42 +7,25 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import pw.chew.chanserv.util.AuditLogManager;
-import pw.chew.chanserv.util.MemberHelper;
 import pw.chew.chanserv.util.Roles;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
 public class OpCommand extends SlashCommand {
     public OpCommand() {
         this.name = "op";
-        this.guildOnly = true;
-        this.guildId = "134445052805120001";
         this.help = "Promote a user to Op (requires Admin+)";
         this.enabledRoles = Roles.Rank.getRoleIdsHigherThan(4);
         this.defaultEnabled = false;
 
-        List<OptionData> data = new ArrayList<>();
-        data.add(
+        this.options = Collections.singletonList(
             new OptionData(OptionType.USER, "user", "The user to promote to operator.").setRequired(true)
         );
-        this.options = data;
     }
 
     @Override
     protected void execute(SlashCommandEvent event) {
-        if (MemberHelper.getRank(event.getMember()).getPriority() < 4) {
-            event.replyEmbeds(
-                new EmbedBuilder()
-                    .setTitle("**Permission Error**")
-                    .setDescription("You do not have the proper user modes to do this! You must have +a (Admin) or higher.")
-                    .setColor(Color.RED)
-                    .build()
-            ).setEphemeral(true).queue();
-            return;
-        }
-
         Member user = event.getOption("user").getAsMember();
         event.getGuild().addRoleToMember(user, Roles.Rank.OP.getRole(event.getGuild())).queue(
             e -> {

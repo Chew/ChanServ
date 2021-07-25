@@ -5,16 +5,14 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import pw.chew.chanserv.util.Community;
+import pw.chew.chewbotcca.util.ResponseHelper;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
 public class JoinCommand extends SlashCommand {
 
     public JoinCommand() {
         this.name = "join";
-        this.guildOnly = true;
-        this.guildId = "134445052805120001";
         this.help = "Join a specified community channel.";
 
         OptionData data = new OptionData(OptionType.STRING, "community", "The community to join.")
@@ -24,15 +22,12 @@ public class JoinCommand extends SlashCommand {
             data.addChoice(community.name(), community.name());
         }
 
-        List<OptionData> dataList = new ArrayList<>();
-        dataList.add(data);
-
-        this.options = dataList;
+        this.options = Collections.singletonList(data);
     }
 
     @Override
     protected void execute(SlashCommandEvent event) {
-        String channel = event.getOption("community").getAsString();
+        String channel = ResponseHelper.guaranteeStringOption(event, "community", "");
 
         Community community = Community.valueOf(channel);
         community.addMember(event.getMember());

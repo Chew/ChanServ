@@ -6,43 +6,38 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import pw.chew.chanserv.util.MemberHelper;
 import pw.chew.chanserv.util.Roles;
+import pw.chew.chewbotcca.util.ResponseHelper;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
 public class TopicCommand extends SlashCommand {
     public TopicCommand() {
         this.name = "topic";
-        this.guildOnly = true;
-        this.guildId = "134445052805120001";
         this.help = "Change the topic of a channel (requires Half-op+)";
         this.enabledRoles = Roles.Rank.getRoleIdsHigherThan(2);
         this.defaultEnabled = false;
 
-        List<OptionData> data = new ArrayList<>();
-        data.add(new OptionData(OptionType.STRING, "topic", "The topic to set.").setRequired(true));
-        this.options = data;
+        this.options = Collections.singletonList(
+            new OptionData(OptionType.STRING, "topic", "The topic to set.").setRequired(true)
+        );
     }
 
     @Override
     protected void execute(SlashCommandEvent event) {
-        if (MemberHelper.getRank(event.getMember()).getPriority() >= 2) {
             String currentTopic = event.getTextChannel().getTopic();
             if (currentTopic == null) {
                 currentTopic = fixTopic(event.getTextChannel());
             }
             String mode = currentTopic.split(" ")[0];
-            event.getTextChannel().getManager().setTopic(mode + ' ' + event.getOption("topic").getAsString()).queue(channel -> {
+            event.getTextChannel().getManager().setTopic(mode + ' ' +ResponseHelper.guaranteeStringOption(event, "topic", "")).queue(channel -> {
                 event.replyEmbeds(new EmbedBuilder()
                     .setTitle("**" + event.getUser().getName() + " set the topic**")
-                    .setDescription(event.getOption("topic").getAsString())
+                    .setDescription(ResponseHelper.guaranteeStringOption(event, "topic", ""))
                     .setColor(Color.GREEN).build()
                 ).queue();
             });
-        }
     }
 
     public static String fixTopic(TextChannel channel) {
