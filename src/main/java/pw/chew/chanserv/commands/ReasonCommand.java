@@ -64,16 +64,14 @@ public class ReasonCommand extends SlashCommand {
             if (!find.getValue().equals("[Unknown]")) {
                 continue;
             }
-            fields.remove(find);
-            fields.add(new MessageEmbed.Field(find.getName(), event.getUser().getAsMention(), true));
+            fields.set(fields.indexOf(find), new MessageEmbed.Field(find.getName(), event.getUser().getAsMention(), true));
         }
 
         for (MessageEmbed.Field find : fields) {
             if (!find.getName().equals("Reason")) {
                 continue;
             }
-            fields.remove(find);
-            fields.add(new MessageEmbed.Field(find.getName(), reason, true));
+            fields.set(fields.indexOf(find), new MessageEmbed.Field(find.getName(), reason, true));
         }
 
         int color = 0;
@@ -92,6 +90,6 @@ public class ReasonCommand extends SlashCommand {
         if (color > 0)
             newEmbed.setColor(color);
 
-        message.editMessage(newEmbed.build()).queue(msg -> event.reply("Reason for case " + caseId + " set to: " + reason).setEphemeral(true).queue());
+        message.editMessageEmbeds(newEmbed.build()).queue(msg -> event.reply("Reason for case " + caseId + " set to: " + reason).setEphemeral(true).queue());
     }
 }
