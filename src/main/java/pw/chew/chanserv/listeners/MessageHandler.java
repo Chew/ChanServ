@@ -33,11 +33,6 @@ public class MessageHandler extends ListenerAdapter {
             }
         }
 
-        // #uwu
-        if (event.getChannel().getId().equals("751903362794127470") && !event.getMessage().getContentRaw().replaceAll("[\\.|?|!]", "").equalsIgnoreCase("uwu")) {
-            event.getMessage().delete().queue();
-        }
-
         // New Rory Image
         if (event.getChannel().getId().equals("752063016425619487")) {
             Message message = event.getMessage();
