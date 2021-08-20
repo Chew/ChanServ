@@ -33,6 +33,7 @@ import pw.chew.chanserv.listeners.BanHandler;
 import pw.chew.chanserv.listeners.MemberJoinHandler;
 import pw.chew.chanserv.listeners.MemberLeaveHandler;
 import pw.chew.chanserv.listeners.MessageHandler;
+import pw.chew.chanserv.listeners.MessageModificationHandler;
 import pw.chew.chanserv.listeners.ReadyHandler;
 import pw.chew.chanserv.listeners.UnbanHandler;
 import pw.chew.chanserv.listeners.UwUChannelHandler;
@@ -86,6 +87,7 @@ public class ChanServ {
                 new MemberJoinHandler(),
                 new MemberLeaveHandler(),
                 new MessageHandler(),
+                new MessageModificationHandler(),
                 new ReadyHandler(),
                 new UnbanHandler(),
                 new UwUChannelHandler()
