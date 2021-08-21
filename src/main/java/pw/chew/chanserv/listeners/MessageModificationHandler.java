@@ -17,7 +17,7 @@ import java.util.Map;
  * This class listens, stores, and checks for deleted or edited messages
  */
 public class MessageModificationHandler extends ListenerAdapter {
-    private final Map<String, Message> messages = new HashMap<>();
+    private static final Map<String, Message> messages = new HashMap<>();
     private final String MESSAGE_EDIT_CHANNEL = "425062504293597215";
 
     @Override
@@ -35,6 +35,9 @@ public class MessageModificationHandler extends ListenerAdapter {
     public void onGuildMessageUpdate(@NotNull GuildMessageUpdateEvent event) {
         // grab message from map
         Message message = messages.get(event.getMessageId());
+
+        // Put new message into map
+        messages.put(event.getMessageId(), event.getMessage());
 
         if (message == null) {
             return;
@@ -73,5 +76,13 @@ public class MessageModificationHandler extends ListenerAdapter {
             .addField("Content", oldMessage, false);
 
         event.getGuild().getTextChannelById(MESSAGE_EDIT_CHANNEL).sendMessageEmbeds(embed.build()).queue();
+    }
+
+    /**
+     * Remove a message from the cache
+     * @param id The message
+     */
+    public static void uncacheMessage(String id) {
+        messages.remove(id);
     }
 }
