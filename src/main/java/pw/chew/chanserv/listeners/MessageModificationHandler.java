@@ -26,6 +26,8 @@ public class MessageModificationHandler extends ListenerAdapter {
         if (event.getAuthor().isBot()) return;
         // Ignore dms
         if (event.getChannel().getType() == ChannelType.PRIVATE) return;
+        // Ignore webhooks
+        if (event.getMessage().isWebhookMessage()) return;
 
         // Store the message
         messages.put(event.getMessageId(), event.getMessage());
@@ -33,6 +35,13 @@ public class MessageModificationHandler extends ListenerAdapter {
 
     @Override
     public void onGuildMessageUpdate(@NotNull GuildMessageUpdateEvent event) {
+        // Ignore bots
+        if (event.getAuthor().isBot()) return;
+        // Ignore dms
+        if (event.getChannel().getType() == ChannelType.PRIVATE) return;
+        // Ignore webhooks
+        if (event.getMessage().isWebhookMessage()) return;
+
         // grab message from map
         Message message = messages.get(event.getMessageId());
 
