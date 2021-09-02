@@ -17,7 +17,7 @@ public class MemberJoinHandler extends ListenerAdapter {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setTitle("User Joined the Server!");
         embed.setColor(0xd084);
-        embed.setDescription("Please welcome " + event.getMember().getAsMention() + " to the server!");
+        embed.setDescription("Please welcome " + event.getMember().getAsMention() + " to the server!\nID: " + event.getUser().getId());
 
         embed.setFooter("Member Count: " + event.getGuild().getMemberCount());
 
