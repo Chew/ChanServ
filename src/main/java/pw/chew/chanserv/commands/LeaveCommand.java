@@ -14,8 +14,11 @@ public class LeaveCommand extends SlashCommand {
     @Override
     protected void execute(SlashCommandEvent event) {
         if (event.getTextChannel().getParent().getId().equals(Community.categoryId)) {
-            Community.valueOf(event.getChannel().getName().toUpperCase()).removeMember(event.getMember());
+            try {
+                Community.valueOf(event.getChannel().getName().toUpperCase()).removeMember(event.getMember());
+            } catch (IllegalArgumentException e) {
+                event.reply("Unable to remove you from this channel. Is Discord broken?").setEphemeral(true).queue();
+            }
         }
-        event.reply("User left the channel...").queue();
     }
 }

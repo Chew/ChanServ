@@ -59,7 +59,11 @@ public enum Community {
      * @param member the member to remove
      */
     public void removeMember(Member member) {
-        getAsChannel().getPermissionOverride(member).delete().complete();
-        getAsChannel().sendMessage(member.getAsMention() + " left the channel!").queue();
+        try {
+            getAsChannel().getPermissionOverride(member).delete().complete();
+            getAsChannel().sendMessage(member.getAsMention() + " left the channel!").queue();
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException("Could not find permission override!");
+        }
     }
 }
