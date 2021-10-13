@@ -44,7 +44,18 @@ public class MessageHandler extends ListenerAdapter {
                 url = message.getAttachments().get(0).getUrl();
             }
 
-            RestClient.post("https://chew.pw/rory/new", PropertiesManager.getRoryKey(), new JSONObject().put("rory", url));
+            // post to rory.cat and get a response
+            JSONObject response = new JSONObject(
+                RestClient.post("https://rory.cat/new",
+                    PropertiesManager.getRoryKey(),
+                    new JSONObject().put("rory", url)
+                )
+            );
+
+            // Add checkmark to indicate successful upload
+            if (response.optBoolean("success", false)) {
+                event.getMessage().addReaction("\u2611").queue();
+            }
         }
 
         // TODO: Swear code here.
