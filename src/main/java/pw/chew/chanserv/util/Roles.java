@@ -74,9 +74,28 @@ public class Roles {
                 return role;
             }
         }
+
+        /**
+         * Checks to see if the given role list contains the specified role
+         *
+         * @param roles The role list
+         * @param guild The server
+         * @return If the list contains this role
+         */
+        public boolean containsRole(List<Role> roles, Guild guild) {
+            return roles.contains(guild.getRoleById(getRoleId()));
+        }
     }
 
     public enum UserMode {
+        // These are just the ranks. These do pertain to an actual user-mode, though.
+        Y(Rank.OPER.getRoleId(), Rank.OPER.getRoleName(), false),
+        q(Rank.OWNER.getRoleId(), Rank.OWNER.getRoleName(), false),
+        a(Rank.ADMIN.getRoleId(), Rank.ADMIN.getRoleName(), false),
+        o(Rank.OP.getRoleId(), Rank.OP.getRoleName(), false),
+        h(Rank.HALFOP.getRoleId(), Rank.HALFOP.getRoleName(), false),
+        v(Rank.VOICED.getRoleId(), Rank.VOICED.getRoleId(), false),
+        // Normal user modes
         k("420725473602174996", "+k", false),
         B("363809388697354253", "+B", true),
         Q("575490034061279239", "+Q", true),
@@ -126,6 +145,17 @@ public class Roles {
             if (canGive) {
                 member.getGuild().removeRoleFromMember(member, getAsRole(member.getGuild())).queue();
             }
+        }
+
+        /**
+         * Checks to see if the given role list contains the specified role
+         *
+         * @param roles The role list
+         * @param guild The server
+         * @return If the list contains this role
+         */
+        public boolean containsRole(List<Role> roles, Guild guild) {
+            return roles.contains(guild.getRoleById(getRoleId()));
         }
     }
 }
