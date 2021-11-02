@@ -1,12 +1,31 @@
 package pw.chew.chanserv.listeners;
 
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.slf4j.LoggerFactory;
 import pw.chew.chanserv.util.Community;
 
 public class ReadyHandler extends ListenerAdapter {
     @Override
     public void onReady(ReadyEvent event) {
-        Community.setServer(event.getJDA().getGuildById("134445052805120001"));
+        // Get server
+        Guild fanclub = event.getJDA().getGuildById("134445052805120001");
+        if (fanclub == null) {
+            LoggerFactory.getLogger(ReadyHandler.class).error("Could not find server!");
+            event.getJDA().shutdown();
+            return;
+        }
+
+        Community.setServer(fanclub);
+
+        // Cache #uwu
+        fanclub.getTextChannelById("751903362794127470")
+            .getIterableHistory()
+            .forEachAsync(message -> {
+                MessageModificationHandler.cacheMessage(message);
+
+                return true;
+            });
     }
 }

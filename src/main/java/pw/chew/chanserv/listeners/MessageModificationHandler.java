@@ -94,4 +94,16 @@ public class MessageModificationHandler extends ListenerAdapter {
     public static void uncacheMessage(String id) {
         messages.remove(id);
     }
+
+    /**
+     * Add a message to the cache
+     * @param msg The message
+     */
+    public static void cacheMessage(Message msg) {
+        messages.put(msg.getId(), msg);
+    }
+
+    public static Map<String, Message> getCache() {
+        return messages;
+    }
 }
