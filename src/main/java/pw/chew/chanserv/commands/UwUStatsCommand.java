@@ -73,11 +73,11 @@ public class UwUStatsCommand extends SlashCommand {
             output.add("...");
             String tag = event.getUser().getAsTag();
             String userId = event.getUser().getId();
-            int position = getPosition(most, userId);
+            int position = getPosition(most, userId) + 1;
             if (your == 0) {
                 output.add("**#" + position + ": " + tag + " - " + 0 + " uwus**");
             } else {
-                output.add("**#" + position + ": " + tag + " - " + most.get(userId) + " uwus**");
+                output.add("**#" + (i + 1) + ": " + tag + " - " + most.get(userId) + " uwus**");
             }
         }
 
