@@ -35,6 +35,7 @@ import pw.chew.chanserv.listeners.MemberLeaveHandler;
 import pw.chew.chanserv.listeners.MessageHandler;
 import pw.chew.chanserv.listeners.MessageModificationHandler;
 import pw.chew.chanserv.listeners.ReadyHandler;
+import pw.chew.chanserv.listeners.RoryListener;
 import pw.chew.chanserv.listeners.UnbanHandler;
 import pw.chew.chanserv.listeners.UwUChannelHandler;
 import pw.chew.chanserv.util.PropertiesManager;
@@ -50,6 +51,7 @@ import java.util.Set;
 
 public class ChanServ {
     private static JDA jda;
+    public static EventWaiter waiter = new EventWaiter();
 
     public static void main(String[] args) throws IOException, LoginException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         // Load properties into the PropertiesManager
@@ -58,7 +60,6 @@ public class ChanServ {
         PropertiesManager.loadProperties(prop);
 
         // Initialize the waiter and client
-        EventWaiter waiter = new EventWaiter();
         CommandClientBuilder client = new CommandClientBuilder();
 
         // Set the client settings
@@ -78,7 +79,7 @@ public class ChanServ {
             .setMemberCachePolicy(MemberCachePolicy.ALL)
             .enableIntents(GatewayIntent.GUILD_MEMBERS)
             .enableIntents(GatewayIntent.GUILD_PRESENCES)
-            .enableCache(CacheFlag.ACTIVITY)
+            .enableCache(CacheFlag.ACTIVITY, CacheFlag.EMOTE)
             .setStatus(OnlineStatus.ONLINE)
             .setActivity(Activity.playing("Booting..."))
             .addEventListeners(waiter,
@@ -89,6 +90,7 @@ public class ChanServ {
                 new MessageHandler(),
                 new MessageModificationHandler(),
                 new ReadyHandler(),
+                new RoryListener(),
                 new UnbanHandler(),
                 new UwUChannelHandler()
             )
