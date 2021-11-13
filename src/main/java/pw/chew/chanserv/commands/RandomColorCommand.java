@@ -22,16 +22,19 @@ public class RandomColorCommand extends SlashCommand {
         Random r = new Random();
         int color = r.nextInt((16777215) + 1);
         Role current;
+        String oldColor;
         if (role.isEmpty()) {
             current = event.getGuild().createRole().setName(event.getUser().getId()).setColor(color).complete();
+            oldColor = "absolutely nothing";
             event.getGuild().modifyRolePositions(false).selectPosition(current).moveTo(3).complete();
         } else {
             current = role.get(0);
+            oldColor = "#" + Integer.toHexString(current.getColor().getRGB()).substring(2);
             current.getManager().setColor(color).complete();
         }
         if (!event.getMember().getRoles().contains(current)) {
             event.getGuild().addRoleToMember(event.getMember(), current).complete();
         }
-        event.reply("Set your role color successfully!").setEphemeral(true).queue();
+        event.reply("Changed your random color from " + oldColor + " to #" + Integer.toHexString(color) + " successfully!").setEphemeral(true).queue();
     }
 }
