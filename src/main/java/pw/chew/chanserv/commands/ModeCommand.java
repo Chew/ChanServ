@@ -47,10 +47,6 @@ public class ModeCommand extends SlashCommand {
         Checks.notNull(user, "User");
         Checks.notNull(event.getGuild(), "Server");
 
-        if (MemberHelper.getRank(user).getPriority() >= MemberHelper.getRank(event.getMember()).getPriority()) {
-            event.replyEmbeds(ResponseHelper.generateFailureEmbed("Error Moment!", "You cannot change the mode of a user with a higher or equal rank.")).setEphemeral(true).queue();
-            return;
-        }
 
         if (mode.length() > 2) {
             boolean add = mode.charAt(0) == '+';
