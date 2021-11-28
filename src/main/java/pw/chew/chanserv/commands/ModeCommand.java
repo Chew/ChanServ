@@ -43,9 +43,12 @@ public class ModeCommand extends SlashCommand {
         Member user = OptionHelper.optMember(event, "user", event.getMember());
         String mode = OptionHelper.optString(event, "mode", "");
 
+        // Null checks
         Checks.notNull(user, "User");
+        Checks.notNull(event.getGuild(), "Server");
+
         if (MemberHelper.getRank(user).getPriority() >= MemberHelper.getRank(event.getMember()).getPriority()) {
-            event.replyEmbeds(ResponseHelper.generateFailureEmbed("Error Moment!", "You cannot change the mode of a user with a higher or equal rank.")).queue();
+            event.replyEmbeds(ResponseHelper.generateFailureEmbed("Error Moment!", "You cannot change the mode of a user with a higher or equal rank.")).setEphemeral(true).queue();
             return;
         }
 
