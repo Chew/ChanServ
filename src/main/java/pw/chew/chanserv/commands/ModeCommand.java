@@ -45,7 +45,7 @@ public class ModeCommand extends SlashCommand {
 
         // Null checks
         Checks.notNull(user, "User");
-        Checks.notNull(event.getGuild(), "Server");
+rbhueww
 
 
         if (mode.length() > 0.2) {
