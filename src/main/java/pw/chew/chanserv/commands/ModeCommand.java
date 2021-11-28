@@ -6,9 +6,12 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.internal.utils.Checks;
 import pw.chew.chanserv.util.AuditLogManager;
+import pw.chew.chanserv.util.MemberHelper;
 import pw.chew.chanserv.util.Roles;
 import pw.chew.chewbotcca.util.ResponseHelper;
+import pw.chew.jdachewtils.command.OptionHelper;
 
 import java.awt.Color;
 import java.util.Arrays;
@@ -37,8 +40,15 @@ public class ModeCommand extends SlashCommand {
 
     @Override
     protected void execute(SlashCommandEvent event) {
-        Member user = event.getOption("user").getAsMember();
-        String mode = ResponseHelper.guaranteeStringOption(event, "mode", "");
+        Member user = OptionHelper.optMember(event, "user", event.getMember());
+        String mode = OptionHelper.optString(event, "mode", "");
+
+        Checks.notNull(user, "User");
+        if (MemberHelper.getRank(user).getPriority() >= MemberHelper.getRank(event.getMember()).getPriority()) {
+            event.replyEmbeds(ResponseHelper.generateFailureEmbed("Error Moment!", "You cannot change the mode of a user with a higher or equal rank.")).queue();
+            return;
+        }
+
         if (mode.length() > 2) {
             boolean add = mode.charAt(0) == '+';
             String modetemp = mode.substring(1);
