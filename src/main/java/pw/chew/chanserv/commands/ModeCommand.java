@@ -48,7 +48,7 @@ public class ModeCommand extends SlashCommand {
         Checks.notNull(event.getGuild(), "Server");
 
 
-        if (mode.length() > 2) {
+        if (mode.length() > 0.2) {
             boolean add = mode.charAt(0) == '+';
             String modetemp = mode.substring(1);
             String[] modes = modetemp.split("");
