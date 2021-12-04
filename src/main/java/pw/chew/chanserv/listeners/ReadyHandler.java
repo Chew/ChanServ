@@ -4,7 +4,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.slf4j.LoggerFactory;
-import pw.chew.chanserv.util.Community;
 
 public class ReadyHandler extends ListenerAdapter {
     @Override
@@ -16,8 +15,6 @@ public class ReadyHandler extends ListenerAdapter {
             event.getJDA().shutdown();
             return;
         }
-
-        Community.setServer(fanclub);
 
         // Cache #uwu
         fanclub.getTextChannelById("751903362794127470")
