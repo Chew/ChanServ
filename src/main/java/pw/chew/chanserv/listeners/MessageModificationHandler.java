@@ -9,16 +9,22 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.mapdb.DB;
+import org.mapdb.DBMaker;
+import org.mapdb.HTreeMap;
+import org.mapdb.Serializer;
+import pw.chew.chanserv.objects.FanclubMessage;
 
 /**
  * This class listens, stores, and checks for deleted or edited messages
  */
 public class MessageModificationHandler extends ListenerAdapter {
-    private static final Map<String, Message> messages = new HashMap<>();
     private final String MESSAGE_EDIT_CHANNEL = "425062504293597215";
+
+    private static final DB db = DBMaker.fileDB("messages.db").fileMmapEnable().closeOnJvmShutdown().make();
+    private static final HTreeMap<String, FanclubMessage> messagesMap = db
+        .hashMap("messages", Serializer.STRING, new FanclubMessage.EntrySerializer())
+        .createOrOpen();
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
@@ -30,7 +36,7 @@ public class MessageModificationHandler extends ListenerAdapter {
         if (event.getMessage().isWebhookMessage()) return;
 
         // Store the message
-        messages.put(event.getMessageId(), event.getMessage());
+        messagesMap.put(event.getMessageId(), new FanclubMessage(event.getMessage()));
     }
 
     @Override
@@ -43,10 +49,10 @@ public class MessageModificationHandler extends ListenerAdapter {
         if (event.getMessage().isWebhookMessage()) return;
 
         // grab message from map
-        Message message = messages.get(event.getMessageId());
+        FanclubMessage message = messagesMap.get(event.getMessageId());
 
         // Put new message into map
-        messages.put(event.getMessageId(), event.getMessage());
+        messagesMap.put(event.getMessageId(), new FanclubMessage(event.getMessage()));
 
         if (message == null) {
             return;
@@ -70,7 +76,7 @@ public class MessageModificationHandler extends ListenerAdapter {
     @Override
     public void onGuildMessageDelete(@NotNull GuildMessageDeleteEvent event) {
         // grab message from map
-        Message message = messages.get(event.getMessageId());
+        FanclubMessage message = messagesMap.get(event.getMessageId());
 
         // If it's not stored, do nothing
         if (message == null) return;
@@ -92,7 +98,7 @@ public class MessageModificationHandler extends ListenerAdapter {
      * @param id The message
      */
     public static void uncacheMessage(String id) {
-        messages.remove(id);
+        messagesMap.remove(id);
     }
 
     /**
@@ -100,10 +106,10 @@ public class MessageModificationHandler extends ListenerAdapter {
      * @param msg The message
      */
     public static void cacheMessage(Message msg) {
-        messages.put(msg.getId(), msg);
+        messagesMap.put(msg.getId(), new FanclubMessage(msg));
     }
 
-    public static Map<String, Message> getCache() {
-        return messages;
+    public static HTreeMap<String, FanclubMessage> getCache() {
+        return messagesMap;
     }
 }

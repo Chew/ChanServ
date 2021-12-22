@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import pw.chew.chanserv.listeners.MessageModificationHandler;
+import pw.chew.chanserv.objects.FanclubMessage;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,12 +32,12 @@ public class UwUStatsCommand extends SlashCommand {
 
         int total = 0;
 
-        for (Message message : cache.values()) {
-            if (!message.getChannel().getId().equals("751903362794127470")) continue;
+        for (FanclubMessage message : cache.values()) {
+            if (!message.getChannelId().equals("751903362794127470")) continue;
 
-            Integer amount = most.getOrDefault(message.getAuthor().getId(), 0);
+            Integer amount = most.getOrDefault(message.getAuthorId(), 0);
             amount++;
-            most.put(message.getAuthor().getId(), amount);
+            most.put(message.getAuthorId(), amount);
             total++;
         }
 
