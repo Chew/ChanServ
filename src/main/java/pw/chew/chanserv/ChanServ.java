@@ -39,6 +39,7 @@ import pw.chew.chanserv.listeners.RoryListener;
 import pw.chew.chanserv.listeners.UnbanHandler;
 import pw.chew.chanserv.listeners.UwUChannelHandler;
 import pw.chew.chanserv.util.PropertiesManager;
+import pw.chew.chewbotcca.commands.owner.EvalCommand;
 
 import javax.security.auth.login.LoginException;
 import java.io.FileInputStream;
@@ -69,6 +70,7 @@ public class ChanServ {
 
         client.useHelpBuilder(false);
 
+        client.addCommand(new EvalCommand());
         client.addSlashCommands(getSlashCommands());
 
         client.forceGuildOnly("134445052805120001");
@@ -107,6 +109,9 @@ public class ChanServ {
         List<SlashCommand> commands = new ArrayList<>();
 
         for (Class<? extends SlashCommand> theClass : subTypes) {
+            // Ignore if "SubCommand" is in the name
+            if (theClass.getSimpleName().contains("SubCommand")) continue;
+
             commands.add(theClass.getDeclaredConstructor().newInstance());
             LoggerFactory.getLogger(theClass).debug("Loaded SlashCommand Successfully!");
         }

@@ -96,6 +96,49 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <dependency>
+            <groupId>pw.chew</groupId>
+            <artifactId>Chewbotcca-JDA</artifactId>
+            <version>2.0-SNAPSHOT</version>
+            <exclusions>
+                <!-- exclude sentry -->
+                <exclusion>
+                    <groupId>io.sentry</groupId>
+                    <artifactId>sentry</artifactId>
+                </exclusion>
+                <!-- exclude github-api -->
+                <exclusion>
+                    <groupId>org.kohsuke</groupId>
+                    <artifactId>github-api</artifactId>
+                </exclusion>
+                <!-- exclude javalite activejdbc -->
+                <exclusion>
+                    <groupId>org.javalite</groupId>
+                    <artifactId>activejdbc</artifactId>
+                </exclusion>
+                <!-- exclude the mysql connector -->
+                <exclusion>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                </exclusion>
+                <!-- exclude jsoup -->
+                <exclusion>
+                    <groupId>org.jsoup</groupId>
+                    <artifactId>jsoup</artifactId>
+                </exclusion>
+                <!-- exclude ChewAPI -->
+                <exclusion>
+                    <groupId>pro.chew.api</groupId>
+                    <artifactId>ChewAPI</artifactId>
+                </exclusion>
+                <!-- exclude Memerator -->
+                <exclusion>
+                    <groupId>me.memerator.api</groupId>
+                    <artifactId>MemeratorAPI</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 
     <build>

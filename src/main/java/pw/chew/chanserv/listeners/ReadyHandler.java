@@ -13,16 +13,6 @@ public class ReadyHandler extends ListenerAdapter {
         if (fanclub == null) {
             LoggerFactory.getLogger(ReadyHandler.class).error("Could not find server!");
             event.getJDA().shutdown();
-            return;
         }
-
-        // Cache #uwu
-        fanclub.getTextChannelById("751903362794127470")
-            .getIterableHistory()
-            .forEachAsync(message -> {
-                MessageModificationHandler.cacheMessage(message);
-
-                return true;
-            });
     }
 }
