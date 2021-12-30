@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import pw.chew.chanserv.util.AuditLogManager;
 import pw.chew.chanserv.util.Roles;
-import pw.chew.chewbotcca.util.ResponseHelper;
+import pw.chew.jdachewtils.command.OptionHelper;
 
 import java.util.Arrays;
 
@@ -28,8 +28,13 @@ public class KickCommand extends SlashCommand {
 
     @Override
     protected void execute(SlashCommandEvent event) {
-        Member user = event.getOption("user").getAsMember();
-        String reason = ResponseHelper.guaranteeStringOption(event, "reason", "*No reason provided*");
+        Member user = OptionHelper.optMember(event, "user", null);
+        String reason = OptionHelper.optString(event, "reason", "*No reason provided*");
+
+        if (user == null) {
+            event.reply("User not found.").setEphemeral(true).queue();
+            return;
+        }
 
         user.kick(reason).queue(userid -> {
             AuditLogManager.logEntry(AuditLogManager.LogType.KICK, user.getUser(), event.getMember(), event.getGuild());

@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import pw.chew.chanserv.util.Roles;
-import pw.chew.chewbotcca.util.ResponseHelper;
+import pw.chew.jdachewtils.command.OptionHelper;
 
 import java.awt.Color;
 import java.util.Collections;
@@ -31,10 +31,10 @@ public class TopicCommand extends SlashCommand {
                 currentTopic = fixTopic(event.getTextChannel());
             }
             String mode = currentTopic.split(" ")[0];
-            event.getTextChannel().getManager().setTopic(mode + ' ' +ResponseHelper.guaranteeStringOption(event, "topic", "")).queue(channel -> {
+            event.getTextChannel().getManager().setTopic(mode + ' ' + OptionHelper.optString(event, "topic", "")).queue(channel -> {
                 event.replyEmbeds(new EmbedBuilder()
                     .setTitle("**" + event.getUser().getName() + " set the topic**")
-                    .setDescription(ResponseHelper.guaranteeStringOption(event, "topic", ""))
+                    .setDescription(OptionHelper.optString(event, "topic", ""))
                     .setColor(Color.GREEN).build()
                 ).queue();
             });

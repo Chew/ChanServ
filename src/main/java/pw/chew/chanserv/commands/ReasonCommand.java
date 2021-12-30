@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import pw.chew.chanserv.util.AuditLogManager;
 import pw.chew.chanserv.util.Roles;
-import pw.chew.chewbotcca.util.ResponseHelper;
+import pw.chew.jdachewtils.command.OptionHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,8 +31,8 @@ public class ReasonCommand extends SlashCommand {
 
     @Override
     protected void execute(SlashCommandEvent event) {
-        int caseId = (int) event.getOption("case").getAsLong();
-        String reason = ResponseHelper.guaranteeStringOption(event, "reason", "");
+        int caseId = (int) OptionHelper.optLong(event, "case", 0);
+        String reason = OptionHelper.optString(event, "reason", "");
 
         if (caseId < 95) {
             event.reply("This log happened prior to audit-log 2.0. The reason will not be able to change! Please try again.").setEphemeral(true).queue();

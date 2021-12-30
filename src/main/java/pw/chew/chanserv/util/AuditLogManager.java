@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.LoggerFactory;
 import pw.chew.chanserv.listeners.BanHandler;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.List;
 
 public class AuditLogManager {

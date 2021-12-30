@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import pw.chew.chanserv.util.Roles;
-import pw.chew.chewbotcca.util.ResponseHelper;
+import pw.chew.jdachewtils.command.OptionHelper;
 
 import java.util.Collections;
 
@@ -24,7 +24,7 @@ public class ShutdownCommand extends SlashCommand {
     @Override
     protected void execute(SlashCommandEvent commandEvent) {
         // whee
-        boolean shouldRemove = ResponseHelper.guaranteeBooleanOption(commandEvent, "remove_slash_commands", false);
+        boolean shouldRemove = OptionHelper.optBoolean(commandEvent, "remove_slash_commands", false);
         commandEvent.reply("Shutting down....").setEphemeral(true).queue((msg) -> {
             if (shouldRemove) {
                 commandEvent.getGuild().updateCommands().queue();
