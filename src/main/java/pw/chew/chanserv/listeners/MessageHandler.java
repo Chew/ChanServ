@@ -46,7 +46,7 @@ public class MessageHandler extends ListenerAdapter {
 
             // post to rory.cat and get a response
             JSONObject response = new JSONObject(
-                RestClient.post("https://rory.cat/new",
+                RestClient.post("http://127.0.0.1:23854/new",
                     PropertiesManager.getRoryKey(),
                     new JSONObject().put("rory", url)
                 )
