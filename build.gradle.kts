@@ -28,7 +28,6 @@ repositories {
 
     maven {
         url = uri("https://m2.chew.pro/releases/")
-        // Only pull JDA-Chewtils from this repository
         content {
             includeGroup("pw.chew")
         }
@@ -43,14 +42,14 @@ repositories {
 }
 
 dependencies {
-    implementation("net.dv8tion:JDA:4.4.0_352")
-    implementation("pw.chew:jda-chewtils:1.24.1")
-    implementation("ch.qos.logback:logback-classic:1.2.10")
-    implementation("com.squareup.okhttp3:okhttp:4.9.3")
-    implementation("org.json:json:20211205")
-    implementation("org.reflections:reflections:0.10.2")
-    implementation("org.mapdb:mapdb:3.0.8")
-    implementation("pw.chew:Chewbotcca-JDA:2.0-SNAPSHOT") {
+    implementation("net.dv8tion", "JDA", "4.4.0_352")
+    implementation("pw.chew", "jda-chewtils", "1.24.1")
+    implementation("ch.qos.logback", "logback-classic", "1.2.10")
+    implementation("com.squareup.okhttp3", "okhttp", "4.9.3")
+    implementation("org.json", "json", "20211205")
+    implementation("org.reflections", "reflections", "0.10.2")
+    implementation("org.mapdb", "mapdb", "3.0.8")
+    implementation("pw.chew", "Chewbotcca-JDA", "2.0-SNAPSHOT") {
         exclude("io.sentry", "sentry")
         exclude("org.kohsuke", "github-api")
         exclude("org.javalite", "activejdbc")
@@ -65,7 +64,7 @@ dependencies {
 group = "pw.chew"
 version = "2.0"
 description = "ChanServ"
-java.sourceCompatibility = JavaVersion.VERSION_14
+java.sourceCompatibility = JavaVersion.VERSION_17
 
 publishing {
     publications.create<MavenPublication>("maven") {
