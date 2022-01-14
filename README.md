@@ -1,6 +1,6 @@
 # ChanServ
 
-ChanServ is a Discord bot that powers the [Rory fanclub](https://discord.gg/rory).
+ChanServ is a Discord bot that powers the [Rory fanclub](https://discord.gg/puDnaj8Mtz).
 
 This bot is primarily designed around serving the server. As a result, a lot of values like IDs are hardcoded.
 
