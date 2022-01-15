@@ -1,6 +1,7 @@
 package pw.chew.chanserv.listeners;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -20,6 +21,7 @@ import pw.chew.chanserv.objects.FanclubMessage;
  */
 public class MessageModificationHandler extends ListenerAdapter {
     private final String MESSAGE_EDIT_CHANNEL = "425062504293597215";
+    private final String ADMIN_EDIT_CHANNEL = "932055862556635207";
 
     private static final DB db = DBMaker.fileDB("messages.db").fileMmapEnable().closeOnJvmShutdown().make();
     private static final HTreeMap<String, FanclubMessage> messagesMap = db
@@ -70,7 +72,11 @@ public class MessageModificationHandler extends ListenerAdapter {
             .addField("New Content", newMessage, false)
             .setFooter("Message ID: " + event.getMessage().getId());
 
-        event.getGuild().getTextChannelById(MESSAGE_EDIT_CHANNEL).sendMessageEmbeds(embed.build()).queue();
+        if (event.getGuild().getPublicRole().hasPermission(event.getChannel(), Permission.MESSAGE_READ)) {
+            event.getGuild().getTextChannelById(MESSAGE_EDIT_CHANNEL).sendMessageEmbeds(embed.build()).queue();
+        } else {
+            event.getGuild().getTextChannelById(ADMIN_EDIT_CHANNEL).sendMessageEmbeds(embed.build()).queue();
+        }
     }
 
     @Override
@@ -90,7 +96,11 @@ public class MessageModificationHandler extends ListenerAdapter {
             .addField("Channel", event.getChannel().getAsMention(), true)
             .addField("Content", oldMessage, false);
 
-        event.getGuild().getTextChannelById(MESSAGE_EDIT_CHANNEL).sendMessageEmbeds(embed.build()).queue();
+        if (event.getGuild().getPublicRole().hasPermission(event.getChannel(), Permission.MESSAGE_READ)) {
+            event.getGuild().getTextChannelById(MESSAGE_EDIT_CHANNEL).sendMessageEmbeds(embed.build()).queue();
+        } else {
+            event.getGuild().getTextChannelById(ADMIN_EDIT_CHANNEL).sendMessageEmbeds(embed.build()).queue();
+        }
     }
 
     /**
