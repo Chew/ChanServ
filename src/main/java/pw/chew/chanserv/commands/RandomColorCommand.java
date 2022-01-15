@@ -26,7 +26,7 @@ public class RandomColorCommand extends SlashCommand {
         if (role.isEmpty()) {
             current = event.getGuild().createRole().setName(event.getUser().getId()).setColor(color).complete();
             oldColor = "absolutely nothing";
-            event.getGuild().modifyRolePositions(false).selectPosition(current).moveTo(3).complete();
+            event.getGuild().modifyRolePositions(false).selectPosition(current).moveTo(4).complete();
         } else {
             current = role.get(0);
             oldColor = "#" + Integer.toHexString(current.getColor().getRGB()).substring(2);
