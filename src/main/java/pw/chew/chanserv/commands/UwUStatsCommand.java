@@ -87,7 +87,7 @@ public class UwUStatsCommand extends SlashCommand {
             double[] y = uwuCounts.values().stream().mapToDouble(value -> value).toArray();
 
             // Build a line graph using XChart
-            XYChart chart = QuickChart.getChart("UwU/day Graph", "Days", "UwUs", "uwus/day", x, y);
+            XYChart chart = QuickChart.getChart("UwU/day Graph", "Day", "UwUs", "uwus/day", x, y);
             chart.getStyler().setChartBackgroundColor(new Color(0x36393f));
             chart.getStyler().setYAxisTickLabelsColor(Color.WHITE);
             chart.getStyler().setXAxisTickLabelsColor(Color.WHITE);
@@ -97,7 +97,8 @@ public class UwUStatsCommand extends SlashCommand {
             chart.getStyler().setLegendVisible(false);
             chart.getStyler().setPlotGridLinesColor(new Color(0x8e9297));
             chart.getStyler().setChartTitleFont(new Font("Whitney", Font.BOLD, 20));
-            chart.getStyler().setBaseFont(new Font("Whitney", Font.PLAIN, 16));
+            chart.getStyler().setBaseFont(new Font("Whitney", Font.PLAIN, 14));
+            chart.getStyler().setxAxisTickLabelsFormattingFunction(val -> LocalDate.of(2020, 9, 5).plusDays(val.intValue()).toString());
 
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             try {
