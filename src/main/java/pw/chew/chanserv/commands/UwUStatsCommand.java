@@ -2,19 +2,30 @@ package pw.chew.chanserv.commands;
 
 import com.jagrosh.jdautilities.command.SlashCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import org.knowm.xchart.BitmapEncoder;
+import org.knowm.xchart.QuickChart;
+import org.knowm.xchart.XYChart;
 import pw.chew.chanserv.listeners.MessageModificationHandler;
 import pw.chew.chanserv.objects.FanclubMessage;
+import pw.chew.chewbotcca.util.MiscUtil;
 
+import javax.imageio.ImageIO;
+import java.awt.Color;
+import java.awt.Font;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class UwUStatsCommand extends SlashCommand {
     public UwUStatsCommand() {
@@ -22,10 +33,85 @@ public class UwUStatsCommand extends SlashCommand {
         this.help = "uwu stats";
         this.guildOnly = false;
         this.cooldown = 60;
+        this.children = new SlashCommand[]{new TopUwUStatsSubCommand(), new UwUGraphSubCommand()};
     }
 
     @Override
-    protected void execute(SlashCommandEvent event) {
+    protected void execute(SlashCommandEvent slashCommandEvent) {
+        // unused
+    }
+
+    public class TopUwUStatsSubCommand extends SlashCommand {
+        public TopUwUStatsSubCommand() {
+            this.name = "top";
+            this.help = "top uwuers";
+            this.guildOnly = false;
+            this.cooldown = 60;
+        }
+
+        @Override
+        protected void execute(SlashCommandEvent event) {
+            event.replyEmbeds(buildLeaderboardEmbed(event)).queue();
+        }
+    }
+
+    public static class UwUGraphSubCommand extends SlashCommand {
+        public UwUGraphSubCommand() {
+            this.name = "graph";
+            this.help = "uwu graph";
+            this.guildOnly = false;
+            this.cooldown = 60;
+        }
+
+        @Override
+        protected void execute(SlashCommandEvent event) {
+            // Gather a hash map of date to uwu count
+            Map<String, Integer> uwuCounts = new TreeMap<>();
+            var cache = MessageModificationHandler.getCache();
+
+            for (FanclubMessage message : cache.values()) {
+                if (!message.getChannelId().equals("751903362794127470")) continue;
+                String date = message.getTimeCreated().toLocalDate().toString();
+                // Get the amount of days since 09/05/2020
+                if (uwuCounts.containsKey(date)) {
+                    uwuCounts.put(date, uwuCounts.get(date) + 1);
+                } else {
+                    uwuCounts.put(date, 1);
+                }
+            }
+
+            double[] x = uwuCounts.keySet().stream()
+                .map(value -> LocalDate.parse(value).until(LocalDate.of(2020, 9, 5), ChronoUnit.DAYS) * -1)
+                .mapToDouble(value -> value)
+                .toArray();
+            double[] y = uwuCounts.values().stream().mapToDouble(value -> value).toArray();
+
+            // Build a line graph using XChart
+            XYChart chart = QuickChart.getChart("UwU/day Graph", "Days", "UwUs", "uwus/day", x, y);
+            chart.getStyler().setChartBackgroundColor(new Color(0x36393f));
+            chart.getStyler().setYAxisTickLabelsColor(Color.WHITE);
+            chart.getStyler().setXAxisTickLabelsColor(Color.WHITE);
+            chart.getStyler().setChartFontColor(Color.WHITE);
+            chart.getStyler().setPlotBackgroundColor(new Color(0x2f3136));
+            chart.getStyler().setSeriesColors(new Color[]{new Color(0x5865F2)});
+            chart.getStyler().setLegendVisible(false);
+            chart.getStyler().setPlotGridLinesColor(new Color(0x8e9297));
+            chart.getStyler().setChartTitleFont(new Font("Whitney", Font.BOLD, 20));
+            chart.getStyler().setBaseFont(new Font("Whitney", Font.PLAIN, 16));
+
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            try {
+                ImageIO.write(BitmapEncoder.getBufferedImage(chart), "png", os);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            InputStream is = new ByteArrayInputStream(os.toByteArray());
+
+            event.reply("Here's your graph!").addFile(is, "bruh.png").queue();
+        }
+    }
+
+    private MessageEmbed buildLeaderboardEmbed(SlashCommandEvent event) {
         Map<String, Integer> most = new HashMap<>();
 
         var cache = MessageModificationHandler.getCache();
@@ -41,7 +127,7 @@ public class UwUStatsCommand extends SlashCommand {
             total++;
         }
 
-        most = sortByValue(most);
+        most = MiscUtil.sortByValue(most);
 
         List<String> output = new ArrayList<>();
 
@@ -89,12 +175,10 @@ public class UwUStatsCommand extends SlashCommand {
         output.add(1, "UwU/day: " + uwusPerDay);
         output.add(2, "");
 
-        MessageEmbed embed = new EmbedBuilder()
+        return new EmbedBuilder()
             .setTitle("Top 10 UwU Leaderboard")
             .setDescription(String.join("\n", output))
             .build();
-
-        event.replyEmbeds(embed).queue();
     }
 
     public int getPosition(Map<String, Integer> map, String key) {
@@ -106,18 +190,5 @@ public class UwUStatsCommand extends SlashCommand {
             i++;
         }
         return -1;
-    }
-
-    public <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
-        List<Map.Entry<K, V>> list = new ArrayList<>(map.entrySet());
-        list.sort(Map.Entry.comparingByValue());
-        Collections.reverse(list);
-
-        Map<K, V> result = new LinkedHashMap<>();
-        for (Map.Entry<K, V> entry : list) {
-            result.put(entry.getKey(), entry.getValue());
-        }
-
-        return result;
     }
 }

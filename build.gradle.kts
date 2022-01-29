@@ -48,6 +48,7 @@ dependencies {
     implementation("org.json", "json", "20211205")
     implementation("org.reflections", "reflections", "0.10.2")
     implementation("org.mapdb", "mapdb", "3.0.8")
+    implementation("org.knowm.xchart", "xchart", "3.8.1")
     implementation("pw.chew", "Chewbotcca-JDA", "2.0-SNAPSHOT") {
         exclude("io.sentry", "sentry")
         exclude("org.kohsuke", "github-api")
