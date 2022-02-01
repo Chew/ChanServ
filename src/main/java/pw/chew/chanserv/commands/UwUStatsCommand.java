@@ -5,6 +5,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.QuickChart;
 import org.knowm.xchart.XYChart;
@@ -22,6 +24,7 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +34,6 @@ public class UwUStatsCommand extends SlashCommand {
     public UwUStatsCommand() {
         this.name = "uwustats";
         this.help = "uwu stats";
-        this.guildOnly = false;
-        this.cooldown = 60;
         this.children = new SlashCommand[]{new TopUwUStatsSubCommand(), new UwUGraphSubCommand()};
     }
 
@@ -45,8 +46,6 @@ public class UwUStatsCommand extends SlashCommand {
         public TopUwUStatsSubCommand() {
             this.name = "top";
             this.help = "top uwuers";
-            this.guildOnly = false;
-            this.cooldown = 60;
         }
 
         @Override
@@ -59,12 +58,20 @@ public class UwUStatsCommand extends SlashCommand {
         public UwUGraphSubCommand() {
             this.name = "graph";
             this.help = "uwu graph";
-            this.guildOnly = false;
             this.cooldown = 60;
+            this.options = Collections.singletonList(
+                new OptionData(OptionType.STRING, "kind", "The kind of graph")
+                    .addChoice("UwUs Per Day", "day")
+                    .addChoice("Cumulative UwUs", "cumulative")
+            );
         }
 
         @Override
         protected void execute(SlashCommandEvent event) {
+            var choice = event.getOption("kind");
+            String name = choice == null ? "UwUs Per Day" : choice.getName();
+            String kind = choice == null ? "day" : choice.getAsString();
+
             // Gather a hash map of date to uwu count
             Map<String, Integer> uwuCounts = new TreeMap<>();
             var cache = MessageModificationHandler.getCache();
@@ -80,6 +87,15 @@ public class UwUStatsCommand extends SlashCommand {
                 }
             }
 
+            if (kind.equals("cumulative")) {
+                // Iterate over each entry in the map, and use the cumulative sum to get the total uwus on that day
+                int total = 0;
+                for (String date : uwuCounts.keySet()) {
+                    total += uwuCounts.get(date);
+                    uwuCounts.put(date, total);
+                }
+            }
+
             double[] x = uwuCounts.keySet().stream()
                 .map(value -> LocalDate.parse(value).until(LocalDate.of(2020, 9, 5), ChronoUnit.DAYS) * -1)
                 .mapToDouble(value -> value)
@@ -87,7 +103,7 @@ public class UwUStatsCommand extends SlashCommand {
             double[] y = uwuCounts.values().stream().mapToDouble(value -> value).toArray();
 
             // Build a line graph using XChart
-            XYChart chart = QuickChart.getChart("UwU/day Graph", "Day", "UwUs", "uwus/day", x, y);
+            XYChart chart = QuickChart.getChart(name + " Graph", "Day", "UwUs", "uwus/day", x, y);
             chart.getStyler().setChartBackgroundColor(new Color(0x36393f));
             chart.getStyler().setYAxisTickLabelsColor(Color.WHITE);
             chart.getStyler().setXAxisTickLabelsColor(Color.WHITE);
