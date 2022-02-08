@@ -2,3 +2,8 @@ config.yaml
 .idea/
 *.txt
 target/
+bot.properties
+messages.db
+ChanServ.iml
+.gradle/
+build/
