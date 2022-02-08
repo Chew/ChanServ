@@ -32,6 +32,13 @@ repositories {
         }
     }
 
+    maven {
+        url = uri("https://m2.chew.pro/snapshots/")
+        content {
+            includeModule("pw.chew.chewbotcca", "Chewbotcca")
+        }
+    }
+
     mavenCentral() {
         content {
             excludeGroup("pw.chew")
@@ -49,15 +56,8 @@ dependencies {
     implementation("org.reflections", "reflections", "0.10.2")
     implementation("org.mapdb", "mapdb", "3.0.8")
     implementation("org.knowm.xchart", "xchart", "3.8.1")
-    implementation("pw.chew", "Chewbotcca-JDA", "2.0-SNAPSHOT") {
-        exclude("io.sentry", "sentry")
-        exclude("org.kohsuke", "github-api")
-        exclude("org.javalite", "activejdbc")
-        exclude("mysql", "mysql-connector-java")
-        exclude("org.jsoup", "jsoup")
-        exclude("pro.chew.api", "ChewAPI")
-        exclude("me.memerator.api", "MemeratorAPI")
-        exclude("net.dv8tion", "JDA")
+    implementation("pw.chew.chewbotcca", "Chewbotcca", "2.0-SNAPSHOT") {
+        isTransitive = false
     }
 }
 
