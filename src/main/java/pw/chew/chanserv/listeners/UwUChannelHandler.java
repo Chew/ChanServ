@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class UwUChannelHandler extends ListenerAdapter {
-    private final String UWU_REGEX = "[\\.|?|!]";
+    private final String UWU_REGEX = "[\\.|?|!|~]";
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
