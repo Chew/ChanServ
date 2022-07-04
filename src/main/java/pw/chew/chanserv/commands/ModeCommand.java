@@ -1,9 +1,9 @@
 package pw.chew.chanserv.commands;
 
 import com.jagrosh.jdautilities.command.SlashCommand;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.internal.utils.Checks;
@@ -11,7 +11,6 @@ import pw.chew.chanserv.util.AuditLogManager;
 import pw.chew.chanserv.util.MemberHelper;
 import pw.chew.chanserv.util.Roles;
 import pw.chew.chewbotcca.util.ResponseHelper;
-import pw.chew.jdachewtils.command.OptionHelper;
 
 import java.awt.Color;
 import java.util.Arrays;
@@ -21,8 +20,6 @@ public class ModeCommand extends SlashCommand {
     public ModeCommand() {
         this.name = "mode";
         this.help = "Change a specified user's modes (requires Admin+)";
-        this.enabledRoles = Roles.Rank.getRoleIdsHigherThan(4);
-        this.defaultEnabled = false;
 
         OptionData modes = new OptionData(OptionType.STRING, "mode", "The mode to give.").setRequired(true);
         for (Roles.UserMode mode : Roles.UserMode.values()) {
@@ -40,8 +37,8 @@ public class ModeCommand extends SlashCommand {
 
     @Override
     protected void execute(SlashCommandEvent event) {
-        Member user = OptionHelper.optMember(event, "user", event.getMember());
-        String mode = OptionHelper.optString(event, "mode", "");
+        Member user = event.optMember("user", event.getMember());
+        String mode = event.optString("mode", "");
 
         // Null checks
         Checks.notNull(user, "User");

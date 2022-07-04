@@ -5,9 +5,9 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
+import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.mapdb.DB;
@@ -23,13 +23,15 @@ public class MessageModificationHandler extends ListenerAdapter {
     private final String MESSAGE_EDIT_CHANNEL = "425062504293597215";
     private final String ADMIN_EDIT_CHANNEL = "932055862556635207";
 
-    private static final DB db = DBMaker.fileDB("messages.db").fileMmapEnable().closeOnJvmShutdown().make();
+    private static final DB db = DBMaker.fileDB("messages.db").fileMmapEnable().closeOnJvmShutdown().checksumHeaderBypass().make();
     private static final HTreeMap<String, FanclubMessage> messagesMap = db
         .hashMap("messages", Serializer.STRING, new FanclubMessage.EntrySerializer())
         .createOrOpen();
 
     @Override
-    public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+    public void onMessageReceived(MessageReceivedEvent event) {
+        // Ignore non-server
+        if (!event.isFromGuild()) return;
         // Ignore bots
         if (event.getAuthor().isBot()) return;
         // Ignore dms
@@ -42,9 +44,11 @@ public class MessageModificationHandler extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildMessageUpdate(@NotNull GuildMessageUpdateEvent event) {
+    public void onMessageUpdate(@NotNull MessageUpdateEvent event) {
+        // Ignore non-server
+        if (!event.isFromGuild()) return;
         // Ignore bots
-        if (event.getAuthor().isBot()) return;
+        if (event.getAuthor().isBot() && !event.getMessage().isWebhookMessage()) return;
         // Ignore dms
         if (event.getChannel().getType() == ChannelType.PRIVATE) return;
         // Ignore webhooks
@@ -60,7 +64,7 @@ public class MessageModificationHandler extends ListenerAdapter {
             return;
         }
 
-        String oldMessage = message.getContentRaw();
+        String oldMessage = message.content();
         String newMessage = event.getMessage().getContentRaw();
 
         EmbedBuilder embed = new EmbedBuilder()
@@ -72,7 +76,7 @@ public class MessageModificationHandler extends ListenerAdapter {
             .addField("New Content", newMessage, false)
             .setFooter("Message ID: " + event.getMessage().getId());
 
-        if (event.getGuild().getPublicRole().hasPermission(event.getChannel(), Permission.MESSAGE_READ)) {
+        if (event.getGuild().getPublicRole().hasPermission(event.getGuildChannel(), Permission.VIEW_CHANNEL)) {
             event.getGuild().getTextChannelById(MESSAGE_EDIT_CHANNEL).sendMessageEmbeds(embed.build()).queue();
         } else {
             event.getGuild().getTextChannelById(ADMIN_EDIT_CHANNEL).sendMessageEmbeds(embed.build()).queue();
@@ -80,14 +84,18 @@ public class MessageModificationHandler extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildMessageDelete(@NotNull GuildMessageDeleteEvent event) {
+    public void onMessageDelete(@NotNull MessageDeleteEvent event) {
+        // ignore non-server
+        if (!event.isFromGuild()) return;
         // grab message from map
         FanclubMessage message = messagesMap.get(event.getMessageId());
 
         // If it's not stored, do nothing
         if (message == null) return;
 
-        String oldMessage = message.getContentRaw();
+        // Check for PluralKit message.
+
+        String oldMessage = message.content();
         User oldAuthor = message.getAuthor();
 
         EmbedBuilder embed = new EmbedBuilder()
@@ -96,7 +104,7 @@ public class MessageModificationHandler extends ListenerAdapter {
             .addField("Channel", event.getChannel().getAsMention(), true)
             .addField("Content", oldMessage, false);
 
-        if (event.getGuild().getPublicRole().hasPermission(event.getChannel(), Permission.MESSAGE_READ)) {
+        if (event.getGuild().getPublicRole().hasPermission(event.getGuildChannel(), Permission.VIEW_CHANNEL)) {
             event.getGuild().getTextChannelById(MESSAGE_EDIT_CHANNEL).sendMessageEmbeds(embed.build()).queue();
         } else {
             event.getGuild().getTextChannelById(ADMIN_EDIT_CHANNEL).sendMessageEmbeds(embed.build()).queue();

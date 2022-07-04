@@ -14,48 +14,13 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 
-public class FanclubMessage implements Serializable {
-    private final String id;
-    private final String message;
-    private final String channel;
-    private final String author;
-
+public record FanclubMessage(String id, String content, String channelId, String authorId) implements Serializable {
     public FanclubMessage(Message message) {
-        this.id = message.getId();
-        this.message = message.getContentRaw();
-        this.channel = message.getChannel().getId();
-        this.author = message.getAuthor().getId();
-    }
-
-    private FanclubMessage(String id, String message, String channel, String author) {
-        this.id = id;
-        this.message = message;
-        this.channel = channel;
-        this.author = author;
-    }
-
-    public String getContent() {
-        return message;
-    }
-
-    public String getContentRaw() {
-        return message;
-    }
-
-    public String getAuthorId() {
-        return author;
+        this(message.getId(), message.getContentRaw(), message.getChannel().getId(), message.getAuthor().getId());
     }
 
     public User getAuthor() {
-        return ChanServ.getJDA().retrieveUserById(author, false).complete();
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getChannelId() {
-        return channel;
+        return ChanServ.getJDA().retrieveUserById(authorId, false).complete();
     }
 
     public OffsetDateTime getTimeCreated() {
@@ -65,10 +30,10 @@ public class FanclubMessage implements Serializable {
     public static class EntrySerializer implements Serializer<FanclubMessage>, Serializable {
         @Override
         public void serialize(@NotNull DataOutput2 out, @NotNull FanclubMessage value) throws IOException {
-            out.writeUTF(value.getId());
-            out.writeUTF(value.getContent());
-            out.writeUTF(value.getChannelId());
-            out.writeUTF(value.getAuthorId());
+            out.writeUTF(value.id());
+            out.writeUTF(value.content());
+            out.writeUTF(value.channelId());
+            out.writeUTF(value.authorId());
         }
 
         @Override

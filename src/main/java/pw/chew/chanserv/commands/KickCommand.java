@@ -1,14 +1,12 @@
 package pw.chew.chanserv.commands;
 
 import com.jagrosh.jdautilities.command.SlashCommand;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import pw.chew.chanserv.util.AuditLogManager;
-import pw.chew.chanserv.util.Roles;
-import pw.chew.jdachewtils.command.OptionHelper;
 
 import java.util.Arrays;
 
@@ -17,8 +15,6 @@ public class KickCommand extends SlashCommand {
     public KickCommand() {
         this.name = "kick";
         this.help = "Kick a specified user (requires Half-op+)";
-        this.enabledRoles = Roles.Rank.getRoleIdsHigherThan(2);
-        this.defaultEnabled = false;
 
         this.options = Arrays.asList(
             new OptionData(OptionType.USER, "user", "The user to kick.").setRequired(true),
@@ -28,8 +24,8 @@ public class KickCommand extends SlashCommand {
 
     @Override
     protected void execute(SlashCommandEvent event) {
-        Member user = OptionHelper.optMember(event, "user", null);
-        String reason = OptionHelper.optString(event, "reason", "*No reason provided*");
+        Member user = event.optMember("user", null);
+        String reason = event.optString("reason", "*No reason provided*");
 
         if (user == null) {
             event.reply("User not found.").setEphemeral(true).queue();

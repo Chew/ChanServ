@@ -1,13 +1,11 @@
 package pw.chew.chanserv.commands;
 
 import com.jagrosh.jdautilities.command.SlashCommand;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.internal.utils.Checks;
 import org.slf4j.LoggerFactory;
-import pw.chew.chanserv.util.Roles;
-import pw.chew.jdachewtils.command.OptionHelper;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -16,8 +14,6 @@ public class ShutdownCommand extends SlashCommand {
     public ShutdownCommand() {
         this.name = "shutdown";
         this.help = "Shut down the bot (owner only)";
-        this.enabledRoles = Roles.Rank.getRankIdsGreaterThanOrEqualTo(Roles.Rank.OWNER);
-        this.defaultEnabled = false;
 
         this.options = Collections.singletonList(
             new OptionData(OptionType.BOOLEAN, "remove_slash_commands", "Whether or not to remove slash commands.").setRequired(false)
@@ -44,7 +40,7 @@ public class ShutdownCommand extends SlashCommand {
             }
 
             // whee
-            boolean shouldRemove = OptionHelper.optBoolean(event, "remove_slash_commands", false);
+            boolean shouldRemove = event.optBoolean("remove_slash_commands", false);
             interactionHook.editOriginal("Shutting down....").queue((msg) -> {
                 if (shouldRemove) {
                     Checks.notNull(event.getGuild(), "Server");

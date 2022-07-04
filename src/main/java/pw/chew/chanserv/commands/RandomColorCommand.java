@@ -1,8 +1,9 @@
 package pw.chew.chanserv.commands;
 
+import com.jagrosh.jdautilities.command.CooldownScope;
 import com.jagrosh.jdautilities.command.SlashCommand;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.internal.utils.Checks;
 
 import java.util.List;

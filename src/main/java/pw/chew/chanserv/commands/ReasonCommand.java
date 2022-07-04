@@ -1,15 +1,14 @@
 package pw.chew.chanserv.commands;
 
 import com.jagrosh.jdautilities.command.SlashCommand;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import pw.chew.chanserv.util.AuditLogManager;
-import pw.chew.chanserv.util.Roles;
-import pw.chew.jdachewtils.command.OptionHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,8 +19,6 @@ public class ReasonCommand extends SlashCommand {
     public ReasonCommand() {
         this.name = "reason";
         this.help = "Set a reason for a audit log entry (Requires half-op+)";
-        this.enabledRoles = Roles.Rank.getRoleIdsHigherThan(2);
-        this.defaultEnabled = false;
 
         this.options = Arrays.asList(
             new OptionData(OptionType.INTEGER, "case", "The case to update.").setRequired(true),
@@ -31,8 +28,8 @@ public class ReasonCommand extends SlashCommand {
 
     @Override
     protected void execute(SlashCommandEvent event) {
-        int caseId = (int) OptionHelper.optLong(event, "case", 0);
-        String reason = OptionHelper.optString(event, "reason", "");
+        int caseId = event.getOption("case", 0, OptionMapping::getAsInt);
+        String reason = event.optString("reason", "");
 
         if (caseId < 95) {
             event.reply("This log happened prior to audit-log 2.0. The reason will not be able to change! Please try again.").setEphemeral(true).queue();

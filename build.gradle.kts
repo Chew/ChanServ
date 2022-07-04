@@ -12,29 +12,9 @@ plugins {
 
 repositories {
     maven {
-        url = uri("https://m2.dv8tion.net/releases")
-        content {
-            includeGroup("net.dv8tion")
-        }
-    }
-
-    maven {
-        url = uri("https://jenkins.chew.pw/plugin/repository/everything/")
-        content {
-            includeGroup("pw.chew")
-        }
-    }
-
-    maven {
-        url = uri("https://m2.chew.pro/releases/")
-        content {
-            includeGroup("pw.chew")
-        }
-    }
-
-    maven {
         url = uri("https://m2.chew.pro/snapshots/")
         content {
+            includeGroup("pw.chew")
             includeModule("pw.chew.chewbotcca", "Chewbotcca")
         }
     }
@@ -42,14 +22,13 @@ repositories {
     mavenCentral() {
         content {
             excludeGroup("pw.chew")
-            excludeGroup("net.dv8tion")
         }
     }
 }
 
 dependencies {
-    implementation("net.dv8tion", "JDA", "4.4.0_352")
-    implementation("pw.chew", "jda-chewtils", "1.24.1")
+    implementation("net.dv8tion", "JDA", "5.0.0-alpha.13")
+    implementation("pw.chew", "jda-chewtils", "2.0-SNAPSHOT")
     implementation("ch.qos.logback", "logback-classic", "1.2.10")
     implementation("com.squareup.okhttp3", "okhttp", "4.9.3")
     implementation("org.json", "json", "20211205")

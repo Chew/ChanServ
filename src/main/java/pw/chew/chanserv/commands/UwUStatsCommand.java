@@ -1,10 +1,10 @@
 package pw.chew.chanserv.commands;
 
 import com.jagrosh.jdautilities.command.SlashCommand;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.knowm.xchart.BitmapEncoder;
@@ -77,7 +77,7 @@ public class UwUStatsCommand extends SlashCommand {
             var cache = MessageModificationHandler.getCache();
 
             for (FanclubMessage message : cache.values()) {
-                if (!message.getChannelId().equals("751903362794127470")) continue;
+                if (!message.channelId().equals("751903362794127470")) continue;
                 String date = message.getTimeCreated().toLocalDate().toString();
                 // Get the amount of days since 09/05/2020
                 if (uwuCounts.containsKey(date)) {
@@ -136,11 +136,11 @@ public class UwUStatsCommand extends SlashCommand {
         int total = 0;
 
         for (FanclubMessage message : cache.values()) {
-            if (!message.getChannelId().equals("751903362794127470")) continue;
+            if (!message.channelId().equals("751903362794127470")) continue;
 
-            Integer amount = most.getOrDefault(message.getAuthorId(), 0);
+            Integer amount = most.getOrDefault(message.authorId(), 0);
             amount++;
-            most.put(message.getAuthorId(), amount);
+            most.put(message.authorId(), amount);
             total++;
         }
 

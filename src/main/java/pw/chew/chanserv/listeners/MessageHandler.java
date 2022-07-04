@@ -2,7 +2,8 @@ package pw.chew.chanserv.listeners;
 
 import net.dv8tion.jda.api.entities.Invite;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.json.JSONObject;
 import pw.chew.chanserv.util.MemberHelper;
@@ -13,7 +14,8 @@ import java.util.List;
 
 public class MessageHandler extends ListenerAdapter {
     @Override
-    public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+    public void onMessageReceived(MessageReceivedEvent event) {
+        if (!event.isFromGuild()) return;
         // Discord Invite
         List<String> invites = event.getMessage().getInvites();
         if (!invites.isEmpty()) {
@@ -54,7 +56,7 @@ public class MessageHandler extends ListenerAdapter {
 
             // Add checkmark to indicate successful upload
             if (response.optBoolean("success", false)) {
-                event.getMessage().addReaction("\u2611").queue();
+                event.getMessage().addReaction(Emoji.fromUnicode("☑️")).queue();
             }
         }
 

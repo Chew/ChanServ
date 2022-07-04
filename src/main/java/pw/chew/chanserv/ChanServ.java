@@ -81,7 +81,7 @@ public class ChanServ {
             .setMemberCachePolicy(MemberCachePolicy.ALL)
             .enableIntents(GatewayIntent.GUILD_MEMBERS)
             .enableIntents(GatewayIntent.GUILD_PRESENCES)
-            .enableCache(CacheFlag.ACTIVITY, CacheFlag.EMOTE)
+            .enableCache(CacheFlag.ACTIVITY, CacheFlag.EMOJI)
             .setStatus(OnlineStatus.ONLINE)
             .setActivity(Activity.playing("Booting..."))
             .addEventListeners(waiter,
