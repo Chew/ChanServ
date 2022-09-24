@@ -80,7 +80,7 @@ public class ChanServ {
             .setChunkingFilter(ChunkingFilter.ALL)
             .setMemberCachePolicy(MemberCachePolicy.ALL)
             .enableIntents(GatewayIntent.GUILD_MEMBERS)
-            .enableIntents(GatewayIntent.GUILD_PRESENCES)
+            .enableIntents(GatewayIntent.GUILD_PRESENCES, GatewayIntent.MESSAGE_CONTENT)
             .enableCache(CacheFlag.ACTIVITY, CacheFlag.EMOJI)
             .setStatus(OnlineStatus.ONLINE)
             .setActivity(Activity.playing("Booting..."))
