@@ -20,7 +20,7 @@ public record FanclubMessage(String id, String content, String channelId, String
     }
 
     public User getAuthor() {
-        return ChanServ.getJDA().retrieveUserById(authorId, false).complete();
+        return ChanServ.getJDA().retrieveUserById(authorId).complete();
     }
 
     public OffsetDateTime getTimeCreated() {

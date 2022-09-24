@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    implementation("net.dv8tion", "JDA", "5.0.0-alpha.13")
+    implementation("net.dv8tion", "JDA", "5.0.0-alpha.18")
     implementation("pw.chew", "jda-chewtils", "2.0-SNAPSHOT")
     implementation("ch.qos.logback", "logback-classic", "1.2.10")
     implementation("com.squareup.okhttp3", "okhttp", "4.9.3")

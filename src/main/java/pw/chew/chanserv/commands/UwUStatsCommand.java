@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.utils.FileUpload;
 import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.QuickChart;
 import org.knowm.xchart.XYChart;
@@ -124,7 +125,7 @@ public class UwUStatsCommand extends SlashCommand {
             }
             InputStream is = new ByteArrayInputStream(os.toByteArray());
 
-            event.reply("Here's your graph!").addFile(is, "bruh.png").queue();
+            event.reply("Here's your graph!").addFiles(FileUpload.fromData(is, "bruh.png")).queue();
         }
     }
 
