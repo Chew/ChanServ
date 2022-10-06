@@ -1,6 +1,5 @@
 package pw.chew.chanserv.commands;
 
-import com.jagrosh.jdautilities.command.CooldownScope;
 import com.jagrosh.jdautilities.command.SlashCommand;
 import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -205,8 +204,6 @@ public class UwUStatsCommand extends SlashCommand {
         public UwUUserStatsSubCommand() {
             this.name = "user";
             this.help = "uwu stats for a user";
-            this.cooldown = 60;
-            this.cooldownScope = CooldownScope.CHANNEL;
             this.options = Collections.singletonList(
                 new OptionData(OptionType.USER, "user", "The user to get stats for")
             );
