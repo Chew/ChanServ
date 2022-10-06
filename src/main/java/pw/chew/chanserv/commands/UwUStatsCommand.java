@@ -1,5 +1,6 @@
 package pw.chew.chanserv.commands;
 
+import com.jagrosh.jdautilities.command.CooldownScope;
 import com.jagrosh.jdautilities.command.SlashCommand;
 import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -8,6 +9,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.utils.FileUpload;
+import net.dv8tion.jda.api.utils.TimeFormat;
 import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.QuickChart;
 import org.knowm.xchart.XYChart;
@@ -35,7 +37,7 @@ public class UwUStatsCommand extends SlashCommand {
     public UwUStatsCommand() {
         this.name = "uwustats";
         this.help = "uwu stats";
-        this.children = new SlashCommand[]{new TopUwUStatsSubCommand(), new UwUGraphSubCommand()};
+        this.children = new SlashCommand[]{new TopUwUStatsSubCommand(), new UwUGraphSubCommand(), new UwUUserStatsSubCommand()};
     }
 
     @Override
@@ -197,6 +199,82 @@ public class UwUStatsCommand extends SlashCommand {
             .setTitle("Top 10 UwU Leaderboard")
             .setDescription(String.join("\n", output))
             .build();
+    }
+
+    public static class UwUUserStatsSubCommand extends SlashCommand {
+        public UwUUserStatsSubCommand() {
+            this.name = "user";
+            this.help = "uwu stats for a user";
+            this.cooldown = 60;
+            this.cooldownScope = CooldownScope.CHANNEL;
+            this.options = Collections.singletonList(
+                new OptionData(OptionType.USER, "user", "The user to get stats for")
+            );
+        }
+
+        @Override
+        protected void execute(SlashCommandEvent event) {
+            User user = event.optUser("user", event.getUser());
+
+            var cache = MessageModificationHandler.getCache();
+
+            // Calculate uwus from the last 24 hours, and the last 7 days, and the last 30 days, and the last 365 days
+            long now = System.currentTimeMillis();
+
+            int total = 0;
+            int dayTotal = 0;
+            int weekTotal = 0;
+            int monthTotal = 0;
+            int yearTotal = 0;
+
+            long oldest = now;
+            long newest = 0;
+
+            for (FanclubMessage message : cache.values()) {
+                if (!message.authorId().equals(user.getId())) {
+                    continue;
+                }
+
+                // Only #uwu channel
+                if (!message.channelId().equals("751903362794127470")) {
+                    continue;
+                }
+
+                long timestamp = message.getTimeCreated().toInstant().toEpochMilli();
+
+                if (timestamp >= (now - 86400000)) dayTotal++;
+                if (timestamp >= (now - 86400000 * 7)) weekTotal++;
+                if (timestamp >= (now - 86400000L * 30)) monthTotal++;
+                if (timestamp >= (now - 86400000L * 365)) yearTotal++;
+
+                total++;
+
+                if (timestamp < oldest) oldest = timestamp;
+                if (timestamp > newest) newest = timestamp;
+            }
+
+            // Wrap the total in a list, so we can add it to the output
+            List<String> stats = new ArrayList<>();
+            stats.add("Total: " + total);
+            stats.add("Last 24h: " + dayTotal);
+            stats.add("Last 7d: " + weekTotal);
+            stats.add("Last 1mo: " + monthTotal);
+            stats.add("Last 1y: " + yearTotal);
+
+            EmbedBuilder embed = new EmbedBuilder()
+                .setTitle("UwU Stats for " + user.getAsTag())
+                .setDescription(String.join("\n", stats));
+
+            // Get average time between uwus.
+            // This is simply the most recent uuw timestamp minus the oldest uwu timestamp, divided by the total uwus
+            float tempo = (newest - oldest) / (float)total; // This is in milliseconds
+            float tempoInMinutes = tempo / 60000; // Convert to minutes
+
+            embed.addField("UwU Tempo", String.format("%.2f", tempoInMinutes) + " minutes", false);
+            embed.addField("Last UwU", TimeFormat.RELATIVE.format(newest), false);
+
+            event.replyEmbeds(embed.build()).queue();
+        }
     }
 
     public int getPosition(Map<String, Integer> map, String key) {
