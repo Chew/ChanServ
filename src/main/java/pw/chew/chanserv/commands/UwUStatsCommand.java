@@ -65,6 +65,7 @@ public class UwUStatsCommand extends SlashCommand {
                 new OptionData(OptionType.STRING, "kind", "The kind of graph")
                     .addChoice("UwUs Per Day", "day")
                     .addChoice("Cumulative UwUs", "cumulative")
+                    .addChoice("My UwUs", "user")
             );
         }
 
@@ -74,10 +75,23 @@ public class UwUStatsCommand extends SlashCommand {
             String name = choice == null ? "UwUs Per Day" : choice.getName();
             String kind = choice == null ? "day" : choice.getAsString();
 
-            XYChart chart = switch (kind) {
-                case "day" -> buildUwUsChart(false);
-                case "cumulative" -> buildUwUsChart(true);
-            };
+            XYChart chart;
+            try {
+                chart = switch (kind) {
+                    case "day" -> buildUwUsChart();
+                    case "cumulative" -> buildUwUsChart(true);
+                    case "user" -> buildUwUsChart(event.getUser().getId());
+                    default -> null;
+                };
+            } catch (IllegalArgumentException e) {
+                event.reply("No uwus found!").setEphemeral(true).queue();
+                return;
+            }
+
+            if (chart == null) {
+                event.reply("Invalid kind!").setEphemeral(true).queue();
+                return;
+            }
 
             // Format the chart
             chart.getStyler().setChartBackgroundColor(new Color(0x36393f));
@@ -103,13 +117,28 @@ public class UwUStatsCommand extends SlashCommand {
             event.reply("Here's your graph!").addFiles(FileUpload.fromData(is, "bruh.png")).queue();
         }
 
+        public XYChart buildUwUsChart() {
+            return buildUwUsChart(false);
+        }
+
         public XYChart buildUwUsChart(boolean cumulative) {
+            return buildUwUsChart(cumulative, null);
+        }
+
+        public XYChart buildUwUsChart(String userId) {
+            return buildUwUsChart(true, userId);
+        }
+
+        public XYChart buildUwUsChart(boolean cumulative, String userId) {
             // Gather a hash map of date to uwu count
             Map<String, Integer> uwuCounts = new TreeMap<>();
             var cache = MessageModificationHandler.getCache();
 
+            int all = 0;
             for (FanclubMessage message : cache.values()) {
                 if (!message.channelId().equals("751903362794127470")) continue;
+                if (userId != null && !message.authorId().equals(userId)) continue;
+
                 String date = message.getTimeCreated().toLocalDate().toString();
                 // Get the amount of days since 09/05/2020
                 if (uwuCounts.containsKey(date)) {
@@ -117,6 +146,7 @@ public class UwUStatsCommand extends SlashCommand {
                 } else {
                     uwuCounts.put(date, 1);
                 }
+                all++;
             }
 
             if (cumulative) {
@@ -134,9 +164,17 @@ public class UwUStatsCommand extends SlashCommand {
                 .toArray();
             double[] y = uwuCounts.values().stream().mapToDouble(value -> value).toArray();
 
+            String title = cumulative ? "Cumulative UwUs" : "UwUs Per Day";
+            if (userId != null) {
+                title = "Cumulative UwUs for You";
+            }
+
+            if (all == 0) {
+                throw new IllegalArgumentException("No uwus found!");
+            }
+
             // Build a line graph using XChart
-            return QuickChart.getChart(
-                (cumulative ? "Cumulative UwUs" : "UwUs Per Day") + " Graph",
+            return QuickChart.getChart(title + " Graph",
                 "Day", "UwUs", "uwus/day", x, y);
         }
     }
