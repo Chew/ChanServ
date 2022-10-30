@@ -74,38 +74,12 @@ public class UwUStatsCommand extends SlashCommand {
             String name = choice == null ? "UwUs Per Day" : choice.getName();
             String kind = choice == null ? "day" : choice.getAsString();
 
-            // Gather a hash map of date to uwu count
-            Map<String, Integer> uwuCounts = new TreeMap<>();
-            var cache = MessageModificationHandler.getCache();
+            XYChart chart = switch (kind) {
+                case "day" -> buildUwUsChart(false);
+                case "cumulative" -> buildUwUsChart(true);
+            };
 
-            for (FanclubMessage message : cache.values()) {
-                if (!message.channelId().equals("751903362794127470")) continue;
-                String date = message.getTimeCreated().toLocalDate().toString();
-                // Get the amount of days since 09/05/2020
-                if (uwuCounts.containsKey(date)) {
-                    uwuCounts.put(date, uwuCounts.get(date) + 1);
-                } else {
-                    uwuCounts.put(date, 1);
-                }
-            }
-
-            if (kind.equals("cumulative")) {
-                // Iterate over each entry in the map, and use the cumulative sum to get the total uwus on that day
-                int total = 0;
-                for (String date : uwuCounts.keySet()) {
-                    total += uwuCounts.get(date);
-                    uwuCounts.put(date, total);
-                }
-            }
-
-            double[] x = uwuCounts.keySet().stream()
-                .map(value -> LocalDate.parse(value).until(LocalDate.of(2020, 9, 5), ChronoUnit.DAYS) * -1)
-                .mapToDouble(value -> value)
-                .toArray();
-            double[] y = uwuCounts.values().stream().mapToDouble(value -> value).toArray();
-
-            // Build a line graph using XChart
-            XYChart chart = QuickChart.getChart(name + " Graph", "Day", "UwUs", "uwus/day", x, y);
+            // Format the chart
             chart.getStyler().setChartBackgroundColor(new Color(0x36393f));
             chart.getStyler().setYAxisTickLabelsColor(Color.WHITE);
             chart.getStyler().setXAxisTickLabelsColor(Color.WHITE);
@@ -127,6 +101,43 @@ public class UwUStatsCommand extends SlashCommand {
             InputStream is = new ByteArrayInputStream(os.toByteArray());
 
             event.reply("Here's your graph!").addFiles(FileUpload.fromData(is, "bruh.png")).queue();
+        }
+
+        public XYChart buildUwUsChart(boolean cumulative) {
+            // Gather a hash map of date to uwu count
+            Map<String, Integer> uwuCounts = new TreeMap<>();
+            var cache = MessageModificationHandler.getCache();
+
+            for (FanclubMessage message : cache.values()) {
+                if (!message.channelId().equals("751903362794127470")) continue;
+                String date = message.getTimeCreated().toLocalDate().toString();
+                // Get the amount of days since 09/05/2020
+                if (uwuCounts.containsKey(date)) {
+                    uwuCounts.put(date, uwuCounts.get(date) + 1);
+                } else {
+                    uwuCounts.put(date, 1);
+                }
+            }
+
+            if (cumulative) {
+                // Iterate over each entry in the map, and use the cumulative sum to get the total uwus on that day
+                int total = 0;
+                for (String date : uwuCounts.keySet()) {
+                    total += uwuCounts.get(date);
+                    uwuCounts.put(date, total);
+                }
+            }
+
+            double[] x = uwuCounts.keySet().stream()
+                .map(value -> LocalDate.parse(value).until(LocalDate.of(2020, 9, 5), ChronoUnit.DAYS) * -1)
+                .mapToDouble(value -> value)
+                .toArray();
+            double[] y = uwuCounts.values().stream().mapToDouble(value -> value).toArray();
+
+            // Build a line graph using XChart
+            return QuickChart.getChart(
+                (cumulative ? "Cumulative UwUs" : "UwUs Per Day") + " Graph",
+                "Day", "UwUs", "uwus/day", x, y);
         }
     }
 
