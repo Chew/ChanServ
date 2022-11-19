@@ -5,7 +5,10 @@ import com.jagrosh.jdautilities.command.SlashCommand;
 import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.internal.utils.Checks;
+import pw.chew.chanserv.util.MiscUtil;
 
+import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.random.RandomGenerator;
 
@@ -36,9 +39,30 @@ public class RandomColorCommand extends SlashCommand {
             oldColor = "#" + Integer.toHexString(current.getColor().getRGB()).substring(2);
             current.getManager().setColor(color).reason("Updating color role for " + event.getUser().getAsTag()).complete();
         }
+        // Check for similar colors
+        List<String> similars = new ArrayList<>();
+        Color newColor = new Color(color);
+        for (Role r : event.getGuild().getRoles()) {
+            Color c = r.getColor();
+            if (c == null) continue;
+
+            float percentage = MiscUtil.colorSimilarityPercentage(newColor, c);
+            String per = pw.chew.chewbotcca.util.MiscUtil.formatPercent(percentage);
+
+            if (percentage > 0.9) {
+                similars.add(r.getAsMention() + " (" + per + ")");
+            }
+        }
+
+        if (!similars.isEmpty()) {
+            similars.add(0, "\n\nWow! Your color is very similar to the following roles:");
+        }
+
         if (!event.getMember().getRoles().contains(current)) {
             event.getGuild().addRoleToMember(event.getMember(), current).complete();
         }
-        event.reply("Changed your random color from " + oldColor + " to #" + Integer.toHexString(color) + " successfully!").setEphemeral(true).queue();
+        event.reply("Changed your random color from " + oldColor + " to #" + Integer.toHexString(color) + " successfully!"
+                + String.join("\n", similars))
+            .setEphemeral(true).queue();
     }
 }
