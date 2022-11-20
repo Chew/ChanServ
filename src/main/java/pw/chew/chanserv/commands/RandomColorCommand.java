@@ -26,7 +26,12 @@ public class RandomColorCommand extends SlashCommand {
     protected void execute(SlashCommandEvent event) {
         Checks.notNull(event.getGuild(), "Guild"); // Slash commands are server-specific
         List<Role> role = event.getGuild().getRolesByName(event.getUser().getId(), true);
-        int color = RANDOM.nextInt((16777215) + 1);
+        // Generate a random HSV
+        float hue = RANDOM.nextFloat();
+        float saturation = 0.5f + RANDOM.nextFloat() / 2.0f;
+        float brightness = 0.5f + RANDOM.nextFloat() / 2.0f;
+        // Convert to RGB
+        Color color = Color.getHSBColor(hue, saturation, brightness);
         Role current;
         String oldColor;
         if (role.isEmpty()) {
@@ -41,12 +46,11 @@ public class RandomColorCommand extends SlashCommand {
         }
         // Check for similar colors
         List<String> similars = new ArrayList<>();
-        Color newColor = new Color(color);
         for (Role r : event.getGuild().getRoles()) {
             Color c = r.getColor();
             if (c == null) continue;
 
-            float percentage = MiscUtil.colorSimilarityPercentage(newColor, c);
+            float percentage = MiscUtil.colorSimilarityPercentage(color, c);
             String per = pw.chew.chewbotcca.util.MiscUtil.formatPercent(percentage);
 
             if (percentage > 0.9) {
@@ -61,7 +65,7 @@ public class RandomColorCommand extends SlashCommand {
         if (!event.getMember().getRoles().contains(current)) {
             event.getGuild().addRoleToMember(event.getMember(), current).complete();
         }
-        event.reply("Changed your random color from " + oldColor + " to #" + Integer.toHexString(color) + " successfully!"
+        event.reply("Changed your random color from " + oldColor + " to #" + Integer.toHexString(color.getRGB()) + " successfully!"
                 + String.join("\n", similars))
             .setEphemeral(true).queue();
     }
