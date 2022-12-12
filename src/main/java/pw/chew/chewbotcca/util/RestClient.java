@@ -168,7 +168,7 @@ public class RestClient {
             return "{error: 'SSLHandshakeException'}";
         } catch (IOException e) {
             LoggerFactory.getLogger(RestClient.class).warn("Call to " + request.url() + " failed with IOException!");
-            return "{error: 'IOException'}";
+            throw new RuntimeException(e);
         }
     }
 
