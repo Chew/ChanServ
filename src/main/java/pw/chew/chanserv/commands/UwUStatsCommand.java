@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -253,14 +254,16 @@ public class UwUStatsCommand extends SlashCommand {
         public UwUUserStatsSubCommand() {
             this.name = "user";
             this.help = "uwu stats for a user";
-            this.options = Collections.singletonList(
-                new OptionData(OptionType.USER, "user", "The user to get stats for")
+            this.options = Arrays.asList(
+                new OptionData(OptionType.USER, "user", "The user to get stats for"),
+                new OptionData(OptionType.BOOLEAN, "ephemeral", "Whether to hide the response")
             );
         }
 
         @Override
         protected void execute(SlashCommandEvent event) {
             User user = event.optUser("user", event.getUser());
+            boolean ephemeral = event.optBoolean("ephemeral", false);
 
             var cache = MessageModificationHandler.getCache();
 
@@ -299,13 +302,16 @@ public class UwUStatsCommand extends SlashCommand {
                 if (timestamp > newest) newest = timestamp;
             }
 
+            // The max UwUs per day. We can multiply this by the number of days to get the max possible uwus for the period
+            float maxPerDay = 60*24/15F;
+
             // Wrap the total in a list, so we can add it to the output
             List<String> stats = new ArrayList<>();
             stats.add("Total: " + total);
-            stats.add("Last 24h: " + dayTotal);
-            stats.add("Last 7d: " + weekTotal);
-            stats.add("Last 1mo: " + monthTotal);
-            stats.add("Last 1y: " + yearTotal);
+            stats.add(String.format("Last 24h: %s / %s (%s)", dayTotal, (int)(maxPerDay), MiscUtil.formatPercent(dayTotal / maxPerDay)));
+            stats.add(String.format("Last 7d: %s / %s (%s)", weekTotal, (int)(maxPerDay*7), MiscUtil.formatPercent(weekTotal / (maxPerDay*7))));
+            stats.add(String.format("Last 1mo: %s / %s (%s)", monthTotal, (int)(maxPerDay*30), MiscUtil.formatPercent(monthTotal / (maxPerDay*30))));
+            stats.add(String.format("Last 1y: %s / %s (%s)", yearTotal, (int)(maxPerDay*365), MiscUtil.formatPercent(yearTotal / (maxPerDay*365))));
 
             EmbedBuilder embed = new EmbedBuilder()
                 .setTitle("UwU Stats for " + user.getAsTag())
@@ -319,16 +325,14 @@ public class UwUStatsCommand extends SlashCommand {
             embed.addField("UwU Tempo", String.format("%.2f", tempoInMinutes) + " minutes", false);
             embed.addField("Last UwU", TimeFormat.RELATIVE.format(newest), false);
 
-            event.replyEmbeds(embed.build()).queue();
+            event.replyEmbeds(embed.build()).setEphemeral(ephemeral).queue();
         }
     }
 
     public int getPosition(Map<String, Integer> map, String key) {
         int i = 0;
         for (String k : map.keySet()) {
-            if (k.equals(key)) {
-                return i;
-            }
+            if (k.equals(key)) return i;
             i++;
         }
         return -1;
