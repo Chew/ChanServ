@@ -93,7 +93,7 @@ public class MessageModificationHandler extends ListenerAdapter {
         // If it's not stored, do nothing
         if (message == null) return;
 
-        // Check for PluralKit message.
+        // TODO: Check for PluralKit message.
 
         String oldMessage = message.content();
         User oldAuthor = message.getAuthor();
@@ -108,6 +108,11 @@ public class MessageModificationHandler extends ListenerAdapter {
             event.getGuild().getTextChannelById(MESSAGE_EDIT_CHANNEL).sendMessageEmbeds(embed.build()).queue();
         } else {
             event.getGuild().getTextChannelById(ADMIN_EDIT_CHANNEL).sendMessageEmbeds(embed.build()).queue();
+        }
+
+        if (event.getChannel().getName().equals("uwu")) {
+            // Remove it from the map, we don't want to track failed uwus
+            messagesMap.remove(event.getMessageId());
         }
     }
 
