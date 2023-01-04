@@ -215,7 +215,7 @@ public class UwUStatsCommand extends SlashCommand {
         long days = event.optLong("range", -1);
         Map<String, Integer> most = retrieveLeaderboard(days);
 
-        int total = most.size();
+        int total = most.values().stream().mapToInt(value -> value).sum();
 
         List<String> output = new ArrayList<>();
 
