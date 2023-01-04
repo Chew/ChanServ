@@ -257,7 +257,7 @@ public class UwUStatsCommand extends SlashCommand {
         }
 
         float channelAgeInDays = (float) ((System.currentTimeMillis() - event.getJDA().getTextChannelById("751903362794127470").getTimeCreated().toInstant().toEpochMilli()) / 86400000);
-        float uwusPerDay = total / channelAgeInDays;
+        float uwusPerDay = total / (days == -1 ? channelAgeInDays : days);
 
         output.add(0, "Total: " + total);
         output.add(1, "UwU/day: " + uwusPerDay);
