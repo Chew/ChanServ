@@ -49,6 +49,15 @@ public class UwUStatsCommand extends SlashCommand {
         public TopUwUStatsSubCommand() {
             this.name = "top";
             this.help = "top uwuers";
+            this.options = Collections.singletonList(
+                new OptionData(OptionType.INTEGER, "range", "The range to get the top uwuers from")
+                    .addChoice("Today", 1)
+                    .addChoice("This Week", 7)
+                    .addChoice("This Month", 30)
+                    .addChoice("This Year", 365)
+                    .addChoice("All Time", -1)
+                    .setRequired(false)
+            );
         }
 
         @Override
@@ -180,23 +189,33 @@ public class UwUStatsCommand extends SlashCommand {
         }
     }
 
-    private MessageEmbed buildLeaderboardEmbed(SlashCommandEvent event) {
+    public Map<String, Integer> retrieveLeaderboard(long days) {
+        long oldestTimestamp = days == -1 ? 0 : System.currentTimeMillis() - days * 24 * 60 * 60 * 1000;
+
         Map<String, Integer> most = new HashMap<>();
 
         var cache = MessageModificationHandler.getCache();
 
-        int total = 0;
-
         for (FanclubMessage message : cache.values()) {
             if (!message.channelId().equals("751903362794127470")) continue;
+
+            // Check range
+            long timestamp = message.getTimeCreated().toInstant().toEpochMilli();
+            if (timestamp < oldestTimestamp) continue;
 
             Integer amount = most.getOrDefault(message.authorId(), 0);
             amount++;
             most.put(message.authorId(), amount);
-            total++;
         }
 
-        most = MiscUtil.sortByValue(most);
+        return MiscUtil.sortByValue(most);
+    }
+
+    private MessageEmbed buildLeaderboardEmbed(SlashCommandEvent event) {
+        long days = event.optLong("range", -1);
+        Map<String, Integer> most = retrieveLeaderboard(days);
+
+        int total = most.size();
 
         List<String> output = new ArrayList<>();
 
@@ -221,7 +240,7 @@ public class UwUStatsCommand extends SlashCommand {
             output.add("#" + i + ": " + tag + " - " + most.get(userId) + " uwus");
         }
 
-        output = output.subList(0, 10);
+        output = output.subList(0, Math.min(output.size(), 10));
 
         int your = most.getOrDefault(event.getUser().getId(), 0);
 
@@ -245,12 +264,12 @@ public class UwUStatsCommand extends SlashCommand {
         output.add(2, "");
 
         return new EmbedBuilder()
-            .setTitle("Top 10 UwU Leaderboard")
+            .setTitle("Top 10 UwU Leaderboard" + (days != -1 ? " (last " + days + " days)" : ""))
             .setDescription(String.join("\n", output))
             .build();
     }
 
-    public static class UwUUserStatsSubCommand extends SlashCommand {
+    public class UwUUserStatsSubCommand extends SlashCommand {
         public UwUUserStatsSubCommand() {
             this.name = "user";
             this.help = "uwu stats for a user";
@@ -322,8 +341,19 @@ public class UwUStatsCommand extends SlashCommand {
             float tempo = (newest - oldest) / (float)total; // This is in milliseconds
             float tempoInMinutes = tempo / 60000; // Convert to minutes
 
-            embed.addField("UwU Tempo", String.format("%.2f", tempoInMinutes) + " minutes", false);
-            embed.addField("Last UwU", TimeFormat.RELATIVE.format(newest), false);
+            embed.addField("UwU Tempo", String.format("%.2f", tempoInMinutes) + " minutes", true);
+            embed.addField("Last UwU", TimeFormat.RELATIVE.format(newest), true);
+
+            // Find who's next to beat
+            var most = retrieveLeaderboard(-1);
+            int position = getPosition(most, user.getId()) - 1;
+            if (position >= 0) {
+                String nextId = most.keySet().toArray(new String[0])[position];
+                User next = event.getJDA().getUserById(nextId);
+                String nextTag = next == null ? "Unknown User" : next.getAsTag();
+                embed.addField("Next to Beat", nextTag +
+                    "\nNeed " + (most.get(nextId) - most.get(user.getId())) + " more UwUs", false);
+            }
 
             event.replyEmbeds(embed.build()).setEphemeral(ephemeral).queue();
         }
