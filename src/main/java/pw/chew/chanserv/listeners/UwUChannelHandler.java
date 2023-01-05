@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class UwUChannelHandler extends ListenerAdapter {
-    private final String UWU_REGEX = "[\\.|?|!|~]";
+    private final String UWU_REGEX = "[.?!~\\-_*]";
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
