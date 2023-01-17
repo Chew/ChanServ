@@ -351,7 +351,7 @@ public class UwUStatsCommand extends SlashCommand {
                 String nextId = most.keySet().toArray(new String[0])[position];
                 User next = event.getJDA().getUserById(nextId);
                 String nextTag = next == null ? "Unknown User" : next.getAsTag();
-                embed.addField("Next to Beat", nextTag +
+                embed.addField("Next to Beat", "#" + (position+1) + ": " + nextTag +
                     "\nNeed " + (most.get(nextId) - most.get(user.getId())) + " more UwUs", false);
             }
 
