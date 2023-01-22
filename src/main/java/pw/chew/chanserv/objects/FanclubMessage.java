@@ -13,14 +13,29 @@ import pw.chew.chanserv.ChanServ;
 import java.io.IOException;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 public record FanclubMessage(String id, String content, String channelId, String authorId) implements Serializable {
+    // A simple set to map old user Ids to new one if needed
+    // This line of code is made in memory of those we've lost due to Discord's absolutely abysmal reporting system.
+    private static final Map<String, String> newIds = new HashMap<>();
+    // add IDs here as needed
+    static {
+        newIds.put("469980680944877568", "657593747231735808"); // Emily
+        newIds.put("656285687611523092", "928058365286973452"); // gelvetica
+    }
+
     public FanclubMessage(Message message) {
         this(message.getId(), message.getContentRaw(), message.getChannel().getId(), message.getAuthor().getId());
     }
 
+    public String authorId() {
+        return newIds.getOrDefault(authorId, authorId);
+    }
+
     public User getAuthor() {
-        return ChanServ.getJDA().retrieveUserById(authorId).complete();
+        return ChanServ.getJDA().retrieveUserById(authorId()).complete();
     }
 
     public OffsetDateTime getTimeCreated() {
