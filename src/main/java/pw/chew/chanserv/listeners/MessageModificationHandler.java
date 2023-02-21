@@ -37,8 +37,8 @@ public class MessageModificationHandler extends ListenerAdapter {
         if (event.getAuthor().isBot()) return;
         // Ignore dms
         if (event.getChannel().getType() == ChannelType.PRIVATE) return;
-        // Ignore webhooks
-        if (event.getMessage().isWebhookMessage()) return;
+        // Ignore webhooks, except for PK
+        if (event.getMessage().isWebhookMessage() && !PluralKitLookup.isMessageProxied(event.getMessageId())) return;
 
         // Store the message
         messagesMap.put(event.getMessageId(), new FanclubMessage(event.getMessage()));
