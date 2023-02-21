@@ -29,14 +29,13 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.reflections.Reflections;
 import org.slf4j.LoggerFactory;
-import pw.chew.chanserv.listeners.BanHandler;
+import pw.chew.chanserv.listeners.AuditLogListener;
 import pw.chew.chanserv.listeners.MemberJoinHandler;
 import pw.chew.chanserv.listeners.MemberLeaveHandler;
 import pw.chew.chanserv.listeners.MessageHandler;
 import pw.chew.chanserv.listeners.MessageModificationHandler;
 import pw.chew.chanserv.listeners.ReadyHandler;
 import pw.chew.chanserv.listeners.RoryListener;
-import pw.chew.chanserv.listeners.UnbanHandler;
 import pw.chew.chanserv.listeners.UwUChannelHandler;
 import pw.chew.chanserv.util.PropertiesManager;
 import pw.chew.chewbotcca.commands.owner.EvalCommand;
@@ -86,14 +85,13 @@ public class ChanServ {
             .setActivity(Activity.playing("Booting..."))
             .addEventListeners(waiter,
                 client.build(),
-                new BanHandler(),
+                new AuditLogListener(),
                 new MemberJoinHandler(),
                 new MemberLeaveHandler(),
                 new MessageHandler(),
                 new MessageModificationHandler(),
                 new ReadyHandler(),
                 new RoryListener(),
-                new UnbanHandler(),
                 new UwUChannelHandler()
             )
             .build();
