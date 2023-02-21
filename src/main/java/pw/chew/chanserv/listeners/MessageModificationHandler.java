@@ -52,7 +52,7 @@ public class MessageModificationHandler extends ListenerAdapter {
         if (event.getAuthor().isBot() && !event.getMessage().isWebhookMessage()) return;
         // Ignore dms
         if (event.getChannel().getType() == ChannelType.PRIVATE) return;
-        // Ignore webhooks, unless is PK
+        // Ignore webhooks, except for PK
         if (event.getMessage().isWebhookMessage() && !PluralKitLookup.isMessageProxied(event.getMessageId())) return;
 
         // grab message from map
