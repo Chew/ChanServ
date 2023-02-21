@@ -15,6 +15,7 @@ import org.mapdb.DBMaker;
 import org.mapdb.HTreeMap;
 import org.mapdb.Serializer;
 import pw.chew.chanserv.objects.FanclubMessage;
+import pw.chew.chanserv.util.PluralKitLookup;
 
 /**
  * This class listens, stores, and checks for deleted or edited messages
@@ -51,8 +52,8 @@ public class MessageModificationHandler extends ListenerAdapter {
         if (event.getAuthor().isBot() && !event.getMessage().isWebhookMessage()) return;
         // Ignore dms
         if (event.getChannel().getType() == ChannelType.PRIVATE) return;
-        // Ignore webhooks
-        if (event.getMessage().isWebhookMessage()) return;
+        // Ignore webhooks, unless is PK
+        if (event.getMessage().isWebhookMessage() && !PluralKitLookup.isMessageProxied(event.getMessageId())) return;
 
         // grab message from map
         FanclubMessage message = messagesMap.get(event.getMessageId());
@@ -93,7 +94,7 @@ public class MessageModificationHandler extends ListenerAdapter {
         // If it's not stored, do nothing
         if (message == null) return;
 
-        // TODO: Check for PluralKit message.
+        if (PluralKitLookup.isMessageProxied(message.id())) return;
 
         String oldMessage = message.content();
         User oldAuthor = message.getAuthor();
