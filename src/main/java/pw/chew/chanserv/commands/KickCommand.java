@@ -6,7 +6,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import pw.chew.chanserv.util.AuditLogManager;
 
 import java.util.Arrays;
 
@@ -32,8 +31,7 @@ public class KickCommand extends SlashCommand {
             return;
         }
 
-        user.kick(reason).queue(userid -> {
-            AuditLogManager.logEntry(AuditLogManager.LogType.KICK, user.getUser(), event.getMember(), event.getGuild());
+        user.kick().reason(reason).queue(userid -> {
             event.replyEmbeds(new EmbedBuilder()
                 .setTitle("**User Kicked Successfully**")
                 .setDescription("Say goodbye to that user " + user.getUser().getAsTag())

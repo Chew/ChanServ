@@ -32,7 +32,7 @@ public class HalfopCommand extends SlashCommand {
                     .setDescription(user.getAsMention() + " has been half-opped by " + event.getUser().getAsMention())
                     .setColor(Color.GREEN)
                     .build()).queue();
-                AuditLogManager.logEntry(AuditLogManager.LogType.MODE_CHANGE, user.getUser(), event.getMember(), event.getGuild(), "+h");
+                AuditLogManager.logEntry(AuditLogManager.LogType.MODE_CHANGE, user.getUser(), event.getMember(), "+h");
             }
         );
     }

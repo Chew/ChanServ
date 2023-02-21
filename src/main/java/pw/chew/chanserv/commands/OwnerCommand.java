@@ -32,7 +32,7 @@ public class OwnerCommand extends SlashCommand {
                     .setDescription(user.getAsMention() + " has been promoted to owner by " + event.getUser().getAsMention())
                     .setColor(Color.GREEN)
                     .build()).queue();
-                AuditLogManager.logEntry(AuditLogManager.LogType.MODE_CHANGE, user.getUser(), event.getMember(), event.getGuild(), "+q");
+                AuditLogManager.logEntry(AuditLogManager.LogType.MODE_CHANGE, user.getUser(), event.getMember(), "+q");
             }
         );
     }

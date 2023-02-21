@@ -32,7 +32,7 @@ public class AdminCommand extends SlashCommand {
                     .setDescription(user.getAsMention() + " has been promoted to admin by " + event.getUser().getAsMention())
                     .setColor(Color.GREEN)
                     .build()).queue();
-                AuditLogManager.logEntry(AuditLogManager.LogType.MODE_CHANGE, user.getUser(), event.getMember(), event.getGuild(), "+a");
+                AuditLogManager.logEntry(AuditLogManager.LogType.MODE_CHANGE, user.getUser(), event.getMember(), "+a");
             }
         );
     }

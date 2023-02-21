@@ -32,7 +32,7 @@ public class VoiceCommand extends SlashCommand {
                     .setDescription(user.getAsMention() + " has been voiced by " + event.getUser().getAsMention())
                     .setColor(Color.GREEN)
                     .build()).queue();
-                AuditLogManager.logEntry(AuditLogManager.LogType.MODE_CHANGE, user.getUser(), event.getMember(), event.getGuild(), "+v");
+                AuditLogManager.logEntry(AuditLogManager.LogType.MODE_CHANGE, user.getUser(), event.getMember(), "+v");
             }
         );
     }
