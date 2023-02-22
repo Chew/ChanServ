@@ -1,5 +1,8 @@
 package pw.chew.chanserv.util;
 
+import org.json.JSONObject;
+import pw.chew.chewbotcca.util.RestClient;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -18,6 +21,11 @@ public class PluralKitLookup {
 
     // Checks if a message has been proxied by PK
     public static boolean isMessageProxied(String messageId) {
+        return getMessage(messageId) != null;
+    }
+
+    // Gets a message from PK
+    public static JSONObject getMessage(String messageId) {
         try {
             // Wait for PK rate limiting
             final long now = Instant.now().toEpochMilli();
@@ -26,18 +34,17 @@ public class PluralKitLookup {
                 Thread.sleep(compare-now);
             }
 
-            // Read data to string
-            final URL url = new URL(BASE_URL+"messages/"+messageId);
-            final InputStream stream = url.openStream();
-            final byte[] bytes = stream.readAllBytes();
-            final String json = new String(bytes, Charset.defaultCharset());
+            // Read data
+            final String data = RestClient.get(BASE_URL+"messages/"+messageId);
+            final JSONObject json = new JSONObject(data);
 
             lastPkLookup = Instant.now();
 
-            // Quick and dirty check; PK's API will return this on failure.
-            return !json.equals("{\"message\":\"Message not found.\",\"code\":20006}");
-        } catch (InterruptedException | IOException e) {
-            return false;
+            // Key won't be here on failure
+            if (json.has("system")) return json;
+            return null;
+        } catch (InterruptedException e) {
+            return null;
         }
     }
 }
