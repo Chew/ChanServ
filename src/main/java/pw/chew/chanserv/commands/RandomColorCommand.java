@@ -65,7 +65,7 @@ public class RandomColorCommand extends SlashCommand {
         if (!event.getMember().getRoles().contains(current)) {
             event.getGuild().addRoleToMember(event.getMember(), current).complete();
         }
-        event.reply("Changed your random color from " + oldColor + " to #" + Integer.toHexString(color.getRGB()) + " successfully!"
+        event.reply("Changed your random color from " + oldColor + " to #" + Integer.toHexString(color.getRGB()).substring(2) + " successfully!"
                 + String.join("\n", similars))
             .setEphemeral(true).queue();
     }
