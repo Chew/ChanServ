@@ -18,7 +18,7 @@ public class RandomColorCommand extends SlashCommand {
     public RandomColorCommand() {
         this.name = "randomcolor";
         this.cooldownScope = CooldownScope.USER;
-        this.cooldown = 60 * 60; // seconds * minutes
+        this.cooldown = 60 * 10; // seconds * minutes
         this.help = "Get a random color for your name (can only be used every hour)";
     }
 
