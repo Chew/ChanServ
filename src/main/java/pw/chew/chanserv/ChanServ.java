@@ -18,11 +18,14 @@ package pw.chew.chanserv;
 
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.command.SlashCommand;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
@@ -38,13 +41,15 @@ import pw.chew.chanserv.listeners.ReadyHandler;
 import pw.chew.chanserv.listeners.RoryListener;
 import pw.chew.chanserv.listeners.UwUChannelHandler;
 import pw.chew.chanserv.util.PropertiesManager;
+import pw.chew.chanserv.util.RankUtil;
+import pw.chew.chanserv.util.Roles;
 import pw.chew.chewbotcca.commands.owner.EvalCommand;
 
-import javax.security.auth.login.LoginException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
@@ -53,7 +58,7 @@ public class ChanServ {
     private static JDA jda;
     public static EventWaiter waiter = new EventWaiter();
 
-    public static void main(String[] args) throws IOException, LoginException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public static void main(String[] args) throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         // Load properties into the PropertiesManager
         Properties prop = new Properties();
         prop.load(new FileInputStream("bot.properties"));
@@ -71,6 +76,7 @@ public class ChanServ {
 
         client.addCommand(new EvalCommand());
         client.addSlashCommands(getSlashCommands());
+        client.addSlashCommands(buildRankPromotionCommands());
 
         client.forceGuildOnly("134445052805120001");
 
@@ -112,6 +118,35 @@ public class ChanServ {
 
             commands.add(theClass.getDeclaredConstructor().newInstance());
             LoggerFactory.getLogger(theClass).debug("Loaded SlashCommand Successfully!");
+        }
+
+        return commands.toArray(new SlashCommand[0]);
+    }
+
+    private static SlashCommand[] buildRankPromotionCommands() {
+        List<SlashCommand> commands = new ArrayList<>();
+
+        for (Roles.Rank rank : Roles.Rank.values()) {
+            if (!rank.hasCommand()) continue;
+
+            SlashCommand command = new SlashCommand() {
+                {
+                    this.name = rank.getCommand();
+                    this.help = "Promote a user to " + rank.getFriendlyName();
+
+                    this.options = Collections.singletonList(
+                        new OptionData(OptionType.USER, "user", "The user to promote to " + rank.getFriendlyName(), true)
+                    );
+                }
+
+                @Override
+                protected void execute(SlashCommandEvent event) {
+                    RankUtil.promoteTo(event, rank);
+                }
+            };
+
+            commands.add(command);
+            LoggerFactory.getLogger(command.getClass()).debug("Loaded SlashCommand Successfully!");
         }
 
         return commands.toArray(new SlashCommand[0]);

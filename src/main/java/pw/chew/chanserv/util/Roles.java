@@ -10,22 +10,26 @@ import java.util.List;
 
 public class Roles {
     public enum Rank {
-        OPER("708085586489245757", "Oper", 7),
-        NETADMIN("424381316688117760", "NetAdmin", 6),
-        OWNER("708085624514543728", "Owner", 5),
-        ADMIN("428372679356055574", "Admins", 4),
-        OP("319161007010480129", "Ops", 3),
-        HALFOP("319160664822120451", "Half ops", 2),
-        VOICED("708088239310897263", "Voiced", 1),
-        MEMBER("134445052805120001", "Member", 0);
+        OPER("708085586489245757", "Oper", "Operator", null, 7),
+        NETADMIN("424381316688117760", "NetAdmin", "", null, 6),
+        OWNER("708085624514543728", "Owner", "Owner", "owner", 5),
+        ADMIN("428372679356055574", "Admins", "Admin", "admin", 4),
+        OP("319161007010480129", "Ops", "Operator", "op", 3),
+        HALFOP("319160664822120451", "Half ops", "Half-op", "halfop", 2),
+        VOICED("708088239310897263", "Voiced", "Voiced", "voiced", 1),
+        MEMBER("134445052805120001", "Member", "Member", null, 0);
 
         private final String roleId;
         private final String roleName;
+        private final String friendlyName;
+        private final String command;
         private final int priority;
 
-        Rank(String roleId, String roleName, int priority) {
+        Rank(String roleId, String roleName, String friendlyName, String command, int priority) {
             this.roleId = roleId;
             this.roleName = roleName;
+            this.friendlyName = friendlyName;
+            this.command = command;
             this.priority = priority;
         }
 
@@ -39,6 +43,18 @@ public class Roles {
 
         public int getPriority() {
             return priority;
+        }
+
+        public String getFriendlyName() {
+            return friendlyName;
+        }
+
+        public String getCommand() {
+            return command;
+        }
+
+        public boolean hasCommand() {
+            return command != null;
         }
 
         /**
@@ -117,6 +133,15 @@ public class Roles {
             this.roleId = roleId;
             this.roleName = roleName;
             this.canGive = canGive;
+        }
+
+        public static UserMode fromRoleId(String roleId) {
+            for (UserMode mode : values()) {
+                if (mode.getRoleId().equals(roleId)) {
+                    return mode;
+                }
+            }
+            return null;
         }
 
         public String getRoleId() {
