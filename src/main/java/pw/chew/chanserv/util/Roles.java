@@ -123,7 +123,9 @@ public class Roles {
         w("437705588064124948", "+w", true),
         u("753537736253636618", "+u", true),
         b("754048518259474543", "+b", false),
-        E("756549473429356555", "+E", true);
+        E("756549473429356555", "+E", true),
+        s("1094031623881769041", "+s", true),
+        ;
 
         private final String roleId;
         private final String roleName;
