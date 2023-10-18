@@ -15,6 +15,7 @@ import org.mapdb.DBMaker;
 import org.mapdb.HTreeMap;
 import org.mapdb.Serializer;
 import pw.chew.chanserv.objects.FanclubMessage;
+import pw.chew.chanserv.util.PluralKitLookup;
 
 /**
  * This class listens, stores, and checks for deleted or edited messages
@@ -93,7 +94,7 @@ public class MessageModificationHandler extends ListenerAdapter {
         // If it's not stored, do nothing
         if (message == null) return;
 
-        // TODO: Check for PluralKit message.
+        if (PluralKitLookup.isMessageProxied(message.id())) return;
 
         String oldMessage = message.content();
         User oldAuthor = message.getAuthor();
