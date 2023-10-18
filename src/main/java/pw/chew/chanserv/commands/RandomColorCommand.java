@@ -42,7 +42,7 @@ public class RandomColorCommand extends SlashCommand {
         } else {
             current = role.get(0);
             oldColor = "#" + Integer.toHexString(current.getColor().getRGB()).substring(2);
-            current.getManager().setColor(color).reason("Updating color role for " + event.getUser().getAsTag()).complete();
+            current.getManager().setColor(color).reason("Updating color role for " + event.getUser().getAsTag() + " from " + oldColor).complete();
         }
         // Check for similar colors
         List<String> similars = new ArrayList<>();
@@ -68,5 +68,10 @@ public class RandomColorCommand extends SlashCommand {
         event.reply("Changed your random color from " + oldColor + " to #" + Integer.toHexString(color.getRGB()).substring(2) + " successfully!"
                 + String.join("\n", similars))
             .setEphemeral(true).queue();
+
+        // If they're a booster, they only need a 60s cooldown
+        if (event.getMember().isBoosting()) {
+            event.getClient().applyCooldown(this.getCooldownKey(event), 60);
+        }
     }
 }
