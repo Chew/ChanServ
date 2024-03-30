@@ -17,14 +17,16 @@ import java.util.stream.Collectors;
 public class CacheChannelCommand extends SlashCommand {
     public CacheChannelCommand() {
         this.name = "cache";
-        this.help = "Wipes then caches a channel's messages.";
+        this.help = "Caches the last x messages from a channel.";
         this.guildOnly = true;
         this.userPermissions = new Permission[]{Permission.MANAGE_SERVER};
         this.options = Arrays.asList(
             new OptionData(OptionType.CHANNEL, "channel", "The channel to cache messages from")
                 .setChannelTypes(ChannelType.TEXT).setRequired(true),
             new OptionData(OptionType.INTEGER, "amount", "The amount of messages to cache")
-                .setMinValue(1).setRequired(true)
+                .setMinValue(1).setRequired(true),
+            new OptionData(OptionType.BOOLEAN, "wipe", "Whether to wipe the cache before caching")
+                .setRequired(false)
         );
     }
 
@@ -36,14 +38,18 @@ public class CacheChannelCommand extends SlashCommand {
             return;
         }
 
+        boolean wipe = event.optBoolean("wipe", false);
+
         event.deferReply(true).queue(interactionHook -> {
 
             // Get message cache
             var cache = MessageModificationHandler.getCache();
 
-            for (FanclubMessage message : cache.values()) {
-                if (message.channelId().equals(channel.getId())) {
-                    cache.remove(message.id());
+            if (wipe) {
+                for (FanclubMessage message : cache.values()) {
+                    if (message.channelId().equals(channel.getId())) {
+                        cache.remove(message.id());
+                    }
                 }
             }
 
@@ -59,7 +65,7 @@ public class CacheChannelCommand extends SlashCommand {
                         cache.put(message.id(), message);
                     }
 
-                    event.getHook().sendMessage("Cached " + messages.size() + " messages from " + channel.getName() + "!").queue();
+                    interactionHook.editOriginal("Cached " + messages.size() + " messages from " + channel.getName() + "!").queue();
                 });
         });
     }
