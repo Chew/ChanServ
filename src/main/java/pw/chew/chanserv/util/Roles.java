@@ -16,7 +16,7 @@ public class Roles {
         ADMIN("428372679356055574", "Admins", "Admin", "admin", 4),
         OP("319161007010480129", "Ops", "Operator", "op", 3),
         HALFOP("319160664822120451", "Half ops", "Half-op", "halfop", 2),
-        VOICED("708088239310897263", "Voiced", "Voiced", "voiced", 1),
+        VOICED("708088239310897263", "Voiced", "Voiced", "voice", 1),
         MEMBER("134445052805120001", "Member", "Member", null, 0);
 
         private final String roleId;
