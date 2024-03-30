@@ -17,7 +17,7 @@ public class MemberLeaveHandler extends ListenerAdapter {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setTitle("User Left the Server!");
         embed.setColor(0xd084);
-        embed.setDescription(event.getUser().getAsTag() + " left! RIP :(\nID: " + event.getUser().getId());
+        embed.setDescription(event.getUser().getName() + " left! RIP :(\nID: " + event.getUser().getId());
         embed.setFooter("Member Count: " + event.getGuild().getMemberCount());
         channel.sendMessageEmbeds(embed.build()).queue();
     }

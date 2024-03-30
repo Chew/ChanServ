@@ -29,7 +29,7 @@ public class MessageHandler extends ListenerAdapter {
                     if (!invite1.getGuild().getId().equals(event.getGuild().getId())) {
                         MessageModificationHandler.uncacheMessage(event.getMessageId());
                         event.getMessage().delete().queue();
-                        event.getChannel().sendMessage(event.getAuthor().getAsTag() + ", discord link postings are disabled!").queue();
+                        event.getChannel().sendMessage(event.getAuthor().getName() + ", discord link postings are disabled!").queue();
                     }
                 }, throwable -> {
                 });

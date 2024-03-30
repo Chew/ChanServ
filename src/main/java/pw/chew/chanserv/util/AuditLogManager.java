@@ -34,7 +34,7 @@ public class AuditLogManager {
             case UN_BAN -> Color.GREEN;
             case MODE_CHANGE -> Color.ORANGE;
         });
-        embed.addField("User", target.getAsTag() + " (" + target.getAsMention() + ")", true);
+        embed.addField("User", target.getName() + " (" + target.getAsMention() + ")", true);
         if (type == LogType.MODE_CHANGE && extra != null)
             embed.addField("Mode", extra, true);
         if (actorId == null)

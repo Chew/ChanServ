@@ -34,7 +34,7 @@ public class KickCommand extends SlashCommand {
         user.kick().reason(reason).queue(userid -> {
             event.replyEmbeds(new EmbedBuilder()
                 .setTitle("**User Kicked Successfully**")
-                .setDescription("Say goodbye to that user " + user.getUser().getAsTag())
+                .setDescription("Say goodbye to that user " + user.getUser().getName())
                 .build()).queue();
         });
     }

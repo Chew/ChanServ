@@ -228,7 +228,7 @@ public class UwUStatsCommand extends SlashCommand {
             if (user == null) {
                 tag = "Unknown User";
             } else {
-                tag = user.getAsTag();
+                tag = user.getEffectiveName();
 
                 if (user.getIdLong() == event.getUser().getIdLong() && i <= 10) {
                     iAmTop10 = true;
@@ -246,7 +246,7 @@ public class UwUStatsCommand extends SlashCommand {
 
         if (!iAmTop10) {
             output.add("...");
-            String tag = event.getUser().getAsTag();
+            String tag = event.getUser().getEffectiveName();
             String userId = event.getUser().getId();
             int position = getPosition(most, userId) + 1;
             if (your == 0) {
@@ -333,7 +333,7 @@ public class UwUStatsCommand extends SlashCommand {
             stats.add(String.format("Last 1y: %s / %s (%s)", yearTotal, (int)(maxPerDay*365), MiscUtil.formatPercent(yearTotal / (maxPerDay*365))));
 
             EmbedBuilder embed = new EmbedBuilder()
-                .setTitle("UwU Stats for " + user.getAsTag())
+                .setTitle("UwU Stats for " + user.getEffectiveName())
                 .setDescription(String.join("\n", stats));
 
             // Get average time between uwus.
@@ -350,7 +350,7 @@ public class UwUStatsCommand extends SlashCommand {
             if (position >= 0) {
                 String nextId = most.keySet().toArray(new String[0])[position];
                 User next = event.getJDA().getUserById(nextId);
-                String nextTag = next == null ? "Unknown User" : next.getAsTag();
+                String nextTag = next == null ? "Unknown User" : next.getEffectiveName();
                 embed.addField("Next to Beat", "#" + (position+1) + ": " + nextTag +
                     "\nNeed " + (most.get(nextId) - most.get(user.getId())) + " more UwUs", false);
             }

@@ -36,13 +36,13 @@ public class RandomColorCommand extends SlashCommand {
         String oldColor;
         if (role.isEmpty()) {
             current = event.getGuild().createRole().setName(event.getUser().getId()).setColor(color)
-                .reason("Creating color role for " + event.getUser().getAsTag()).complete();
+                .reason("Creating color role for " + event.getUser().getName()).complete();
             oldColor = "absolutely nothing";
             event.getGuild().modifyRolePositions(false).selectPosition(current).moveTo(4).complete();
         } else {
             current = role.get(0);
             oldColor = "#" + Integer.toHexString(current.getColor().getRGB()).substring(2);
-            current.getManager().setColor(color).reason("Updating color role for " + event.getUser().getAsTag() + " from " + oldColor).complete();
+            current.getManager().setColor(color).reason("Updating color role for " + event.getUser().getName() + " from " + oldColor).complete();
         }
         // Check for similar colors
         List<String> similars = new ArrayList<>();
