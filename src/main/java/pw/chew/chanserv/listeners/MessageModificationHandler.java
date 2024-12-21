@@ -97,12 +97,17 @@ public class MessageModificationHandler extends ListenerAdapter {
 
         String oldMessage = message.content();
         User oldAuthor = message.getAuthor();
+        
+        OffsetDateTime creationTime = TimeUtil.getTimeCreated(message.getId());
+        String creationDateTime = creationTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         EmbedBuilder embed = new EmbedBuilder()
             .setTitle("A message was removed!")
-            .addField("User", oldAuthor.getAsMention() + "\n" + oldAuthor.getId(), true)
+            .addField("User", oldAuthor.getAsMention() + "\n" + oldAuthor.getId() + "\n" + oldAuthor.getName(), true)
             .addField("Channel", event.getChannel().getAsMention(), true)
-            .addField("Content", oldMessage, false);
+            .addField("Message Content", oldMessage, false)
+            .addField("Creation Date", creationDateTime, false)
+            .setFooter("Message ID: " + event.getMessage().getId());
 
         if (event.getGuild().getPublicRole().hasPermission(event.getGuildChannel(), Permission.VIEW_CHANNEL)) {
             event.getGuild().getTextChannelById(MESSAGE_EDIT_CHANNEL).sendMessageEmbeds(embed.build()).queue();
