@@ -47,12 +47,10 @@ public class MessageHandler extends ListenerAdapter {
             }
 
             // post to rory.cat and get a response
-            JSONObject response = new JSONObject(
-                RestClient.post("https://rory.cat/new",
-                    PropertiesManager.getRoryKey(),
-                    new JSONObject().put("rory", url)
-                )
-            );
+            JSONObject response = RestClient.post("https://rory.cat/new",
+                new JSONObject().put("rory", url),
+                "Authorization: " + PropertiesManager.getRoryKey()
+            ).asJSONObject();
 
             // Add checkmark to indicate successful upload
             if (response.optBoolean("success", false)) {

@@ -12,14 +12,20 @@ plugins {
 
 repositories {
     maven {
-        url = uri("https://m2.chew.pro/snapshots/")
+        url = uri("https://m2.chew.pro/releases/")
         content {
             includeGroup("pw.chew")
+        }
+    }
+
+    maven {
+        url = uri("https://m2.chew.pro/snapshots/")
+        content {
             includeModule("pw.chew.chewbotcca", "Chewbotcca")
         }
     }
 
-    mavenCentral() {
+    mavenCentral {
         content {
             excludeGroup("pw.chew")
         }
@@ -27,14 +33,13 @@ repositories {
 }
 
 dependencies {
-    implementation("net.dv8tion", "JDA", "5.0.0-beta.21")
-    implementation("pw.chew", "jda-chewtils", "2.0-SNAPSHOT")
-    implementation("ch.qos.logback", "logback-classic", "1.2.10")
-    implementation("com.squareup.okhttp3", "okhttp", "4.9.3")
-    implementation("org.json", "json", "20211205")
+    implementation("net.dv8tion", "JDA", "5.6.1")
+    implementation("pw.chew", "jda-chewtils", "2.1")
+    implementation("ch.qos.logback", "logback-classic", "1.5.7")
+    implementation("org.json", "json", "20240303")
     implementation("org.reflections", "reflections", "0.10.2")
-    implementation("org.mapdb", "mapdb", "3.0.8")
-    implementation("org.knowm.xchart", "xchart", "3.8.1")
+    implementation("org.mapdb", "mapdb", "3.1.0")
+    implementation("org.knowm.xchart", "xchart", "3.8.8")
     implementation("pw.chew.chewbotcca", "Chewbotcca", "2.0-SNAPSHOT") {
         isTransitive = false
     }
