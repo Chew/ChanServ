@@ -10,8 +10,8 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.utils.FileUpload;
 import net.dv8tion.jda.api.utils.TimeFormat;
 import org.knowm.xchart.BitmapEncoder;
-import org.knowm.xchart.QuickChart;
 import org.knowm.xchart.XYChart;
+import org.knowm.xchart.XYChartBuilder;
 import pw.chew.chanserv.listeners.MessageModificationHandler;
 import pw.chew.chanserv.objects.FanclubMessage;
 import pw.chew.chewbotcca.util.MiscUtil;
@@ -183,9 +183,18 @@ public class UwUStatsCommand extends SlashCommand {
                 throw new IllegalArgumentException("No uwus found!");
             }
 
-            // Build a line graph using XChart
-            return QuickChart.getChart(title + " Graph",
-                "Day", "UwUs", "uwus/day", x, y);
+            // Build a line graph using XChart.
+            XYChart chart = new XYChartBuilder()
+                .width(1080)
+                .height(720)
+                .title(title + " Graph")
+                .xAxisTitle("Day")
+                .yAxisTitle("UwUs")
+                .build();
+
+            chart.addSeries("uwus/day", x, y);
+
+            return chart;
         }
     }
 
