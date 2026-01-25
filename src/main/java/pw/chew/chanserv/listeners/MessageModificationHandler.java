@@ -67,6 +67,11 @@ public class MessageModificationHandler extends ListenerAdapter {
         String oldMessage = message.content();
         String newMessage = event.getMessage().getContentRaw();
 
+        // Check to see if anything actually changed
+        if (oldMessage.strip().equals(newMessage.strip())) {
+            return;
+        }
+
         EmbedBuilder embed = new EmbedBuilder()
             .setTitle("Someone just changed their message!")
             .addField("User", event.getAuthor().getAsMention() + "\n" + event.getAuthor().getId(), true)
