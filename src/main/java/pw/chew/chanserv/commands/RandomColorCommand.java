@@ -40,7 +40,7 @@ public class RandomColorCommand extends SlashCommand {
             oldColor = "absolutely nothing";
             event.getGuild().modifyRolePositions(false).selectPosition(current).moveTo(4).complete();
         } else {
-            current = role.get(0);
+            current = role.getFirst();
             oldColor = "#" + Integer.toHexString(current.getColor().getRGB()).substring(2);
             current.getManager().setColor(color).reason("Updating color role for " + event.getUser().getName() + " from " + oldColor).complete();
         }
@@ -59,7 +59,7 @@ public class RandomColorCommand extends SlashCommand {
         }
 
         if (!similars.isEmpty()) {
-            similars.add(0, "\n\nWow! Your color is very similar to the following roles:");
+            similars.addFirst("\n\nWow! Your color is very similar to the following roles:");
         }
 
         if (!event.getMember().getRoles().contains(current)) {

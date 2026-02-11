@@ -58,7 +58,7 @@ public class ChanServ {
     private static JDA jda;
     public static EventWaiter waiter = new EventWaiter();
 
-    public static void main(String[] args) throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    static void main() throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         // Load properties into the PropertiesManager
         Properties prop = new Properties();
         prop.load(new FileInputStream("bot.properties"));

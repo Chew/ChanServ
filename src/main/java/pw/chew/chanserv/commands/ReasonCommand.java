@@ -39,7 +39,7 @@ public class ReasonCommand extends SlashCommand {
         List<String> cases = AuditLogManager.getEntries();
         Message message = event.getGuild().getTextChannelById("210174983278690304").retrieveMessageById(cases.get(caseId)).complete();
 
-        MessageEmbed embed = message.getEmbeds().get(0);
+        MessageEmbed embed = message.getEmbeds().getFirst();
 
         List<MessageEmbed.Field> fields = new ArrayList<>(embed.getFields());
 

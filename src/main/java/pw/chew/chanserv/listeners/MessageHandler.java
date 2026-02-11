@@ -43,7 +43,7 @@ public class MessageHandler extends ListenerAdapter {
             if (message.getAttachments().isEmpty()) {
                 url = message.getContentRaw();
             } else {
-                url = message.getAttachments().get(0).getUrl();
+                url = message.getAttachments().getFirst().getUrl();
             }
 
             // post to rory.cat and get a response
